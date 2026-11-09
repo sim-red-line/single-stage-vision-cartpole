@@ -1,0 +1,76 @@
+hardware:
+  enabled: true
+  serial_port: /dev/serial/by-id/usb-Waveshare_RP2040_Zero_E6636825930C5527-if00
+camera:
+  enabled: true
+  index: 0
+  fourcc: MJPG
+  width: 640
+  height: 480
+  fps: 30
+  exposure: 45
+  white_balance: 4000
+  gain: 64
+tracking:
+  profile: angle-reference-20261101
+  morphology_kernel: 3
+  brightness_roi_fraction:
+  - 0.7
+  - 0.1
+  - 0.95
+  - 0.35
+coordinates:
+  rail_length_mm: 512.738
+  rail_left_px: 147.08
+  rail_right_px: 478.51
+  camera_x_sign: 1
+  pivot_y_px: 251.346
+  vertical_offset_rad: 0.01037155
+controller:
+  cart_center_mm: 256.369
+  output_mode: acceleration
+  output_sign: -1
+  engage_angle_rad: 0.22
+  fail_angle_rad: 0.26
+  max_velocity_mm_s: 240.0
+  max_acceleration_mm_s2: 2000.0
+  swing_up:
+    enabled: true
+    pendulum_length_m: 0.187
+    energy_rate_lag_s: 0.0
+    prediction_camera_latency_s: 0.0
+    prediction_damping_s: 0.06
+    prediction_coulomb_rad_s2: 0.36
+    max_duration_s: 30.0
+    max_cart_excursion_mm: 160.0
+    max_velocity_mm_s: 240.0
+    max_acceleration_mm_s2: 1500.0
+    capture_angle_rad: 0.22
+    capture_omega_rad_s: 1.5
+    capture_velocity_headroom_fraction: 0.2
+    balance_prediction_camera_latency_s: 0.02
+    balance_rate_lag_s: 0.03
+    upright_centering_window_rad: 0.0
+    balance_max_velocity_mm_s: 240.0
+    energy_gain: 46.0
+    energy_target_margin: 0.045
+    kick_acceleration_mm_s2: 200.0
+    kick_duration_s: 0.3
+    kick_direction: 1.0
+    cart_position_gain_s2: 3.2
+    cart_velocity_gain_s: 3.0
+  gains:
+    kp_angle: 26000.0
+    ki_angle: 0.0
+    kd_angle: 3300.0
+    kp_position: 7.7e-06
+    ki_position: 0.0
+    kd_position: 0.0001875
+logging:
+  cart_center_mm: 256.369
+  velocity_limit_mm_s: 240.0
+safety:
+  braking_acceleration_mm_s2: 1000.0
+web:
+  host: 127.0.0.1
+  port: 8000

@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "single-stage-vision-cartpole"
+version = "0.1.0"
+description = "Vision-based single-stage inverted-pendulum controller for Raspberry Pi and RP2040"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --basetemp=.pytest-tmp"
+

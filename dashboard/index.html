@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vision Cart-Pole Lab</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">RASPBERRY PI · RP2040 · SUPERVISED CONTROL</p>
+      <h1>Vision Cart-Pole Lab</h1>
+    </div>
+    <div class="top-actions">
+      <div id="connection" class="connection"><span></span> 연결 중</div>
+      <div id="safety-state" class="state state-disconnected">DISCONNECTED</div>
+      <button id="estop" class="button estop">EMERGENCY STOP</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-grid">
+      <article class="panel camera-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">LIVE VISION</p>
+            <h2>마커 추적</h2>
+          </div>
+          <div class="metrics-inline">
+            <span><b id="fps">—</b> FPS</span>
+            <span><b id="processing-ms">—</b> ms vision</span>
+            <span><b id="latency-ms">—</b> ms latency</span>
+            <span><b id="pi-power">—</b> Pi power</span>
+          </div>
+        </div>
+        <div id="video-wrap" class="video-wrap">
+          <img id="video" src="/api/video.mjpg" alt="카메라 및 마커 검출 영상">
+          <canvas id="roi-overlay"></canvas>
+          <div id="video-placeholder">카메라 프레임 대기 중</div>
+        </div>
+        <div class="vision-footer">
+          <span id="tracking-pill" class="badge bad">unavailable</span>
+          <span id="tracking-reason">추적 결과가 없습니다.</span>
+          <span class="push">밝기 <b id="brightness">—</b></span>
+        </div>
+      </article>
+
+      <aside class="panel telemetry-panel">
+        <div class="panel-heading">
+          <div><p class="kicker">REAL-TIME STATE</p><h2>제어 상태</h2></div>
+        </div>
+        <div class="telemetry-grid">
+          <div class="value-card accent"><span>진자 각도</span><strong id="theta">—</strong><small>deg</small></div>
+          <div class="value-card"><span>각속도</span><strong id="omega">—</strong><small>rad/s</small></div>
+          <div class="value-card"><span>카트 위치</span><strong id="cart-position">—</strong><small>mm</small></div>
+          <div class="value-card"><span>카트 속도</span><strong id="cart-velocity">—</strong><small>mm/s</small></div>
+          <div class="value-card wide"><span>제어 목표 속도</span><strong id="pid-output">—</strong><small id="control-mode">—</small></div>
+          <div class="value-card wide"><span>RP2040</span><strong id="motor-state" class="word">OFFLINE</strong><small id="motor-detail">—</small></div>
+        </div>
+        <p id="safety-reason" class="notice">motor disconnected</p>
+        <div class="button-row controls">
+          <button id="home" class="button ghost">홈 수행</button>
+          <button id="arm" class="button ghost">ARM</button>
+          <button id="start-control" class="button primary">제어 시작</button>
+          <button id="stop-control" class="button warning">정지</button>
+          <button id="clear-fault" class="button ghost">FAULT 해제</button>
+          <button id="clear-estop" class="button ghost">ESTOP 해제</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="chart-grid">
+      <article class="panel chart-panel"><p class="kicker">PENDULUM</p><h3>각도 · 각속도</h3><canvas id="angle-chart"></canvas></article>
+      <article class="panel chart-panel"><p class="kicker">CART</p><h3>위치 · 목표 속도</h3><canvas id="cart-chart"></canvas></article>
+    </section>
+
+    <section class="chart-grid history-charts">
+      <article class="panel chart-panel"><p class="kicker">EXPERIMENT HISTORY</p><h3>안정 시간 · RMS 각도</h3><canvas id="performance-chart"></canvas></article>
+      <article class="panel chart-panel"><p class="kicker">ANGLE LOOP GAINS</p><h3>Kp · Ki · Kd 변화</h3><canvas id="angle-gain-chart"></canvas></article>
+      <article class="panel chart-panel"><p class="kicker">POSITION LOOP GAINS</p><h3>Kp · Ki · Kd 변화</h3><canvas id="position-gain-chart"></canvas></article>
+    </section>
+
+    <section class="workspace-grid">
+      <article class="panel calibration-panel">
+        <div class="panel-heading">
+          <div><p class="kicker">GUIDED SETUP</p><h2>캘리브레이션</h2></div>
+          <span id="calibration-badge" class="badge bad">필요</span>
+        </div>
+        <p class="help">위 영상에서 스티커를 드래그해 ROI를 만든 뒤 역할을 지정하세요. 실제 존재하는 마커만 등록합니다.</p>
+        <div class="form-row three">
+          <label>마커 이름<input id="marker-name" value="tip" maxlength="32"></label>
+          <label>역할<select id="marker-role"><option value="pendulum_tip">진자 끝점</option><option value="pivot">회전축</option><option value="cart">카트</option><option value="auxiliary">보조</option></select></label>
+          <label class="check"><input id="marker-required" type="checkbox" checked> 필수 마커</label>
+        </div>
+        <div class="button-row"><button id="sample-roi" class="button primary">선택 ROI 분석</button><span id="roi-readout" class="muted">ROI를 드래그하세요.</span></div>
+        <div class="calibration-edit">
+          <div>
+            <label>HSV/면적 설정 JSON<textarea id="marker-json" rows="9" placeholder="ROI 분석 결과"></textarea></label>
+            <button id="update-marker" class="button ghost">수동 범위 반영</button>
+          </div>
+          <div class="mask-box"><span>검출 마스크</span><img id="mask-preview" alt="마커 마스크 미리보기"></div>
+        </div>
+        <hr>
+        <div class="form-row three">
+          <label>프로파일 이름<input id="profile-name" value="default"></label>
+          <label>기존 프로파일<select id="profile-select"><option value="">—</option></select></label>
+          <button id="load-profile" class="button ghost align-end">불러오기</button>
+        </div>
+        <div class="form-row four">
+          <label>레일 왼쪽 px<input id="rail-left" type="number" step="0.1"></label>
+          <label>레일 오른쪽 px<input id="rail-right" type="number" step="0.1"></label>
+          <label>실제 길이 mm<input id="rail-length" type="number" value="500" step="0.1"></label>
+          <label>좌우 방향<select id="camera-sign"><option value="1">영상 오른쪽 = +</option><option value="-1">영상 왼쪽 = +</option></select></label>
+          <label>회전축 y px<input id="pivot-y" type="number" step="0.1" placeholder="축 마커가 없을 때"></label>
+          <label>수직 보정 rad<input id="vertical-offset" type="number" value="0" step="0.001"></label>
+          <label>진자 길이 mm<input id="pendulum-length" type="number" step="0.1" placeholder="선택"></label>
+          <button id="save-profile" class="button primary align-end">저장·검증</button>
+        </div>
+      </article>
+
+      <article class="panel gains-panel">
+        <div class="panel-heading"><div><p class="kicker">APPROVED PARAMETERS</p><h2>현재 PID 게인</h2></div><span id="gain-source" class="badge">config</span></div>
+        <div id="gains" class="gain-list"></div>
+        <p class="help">게인은 설정 파일에서 관리합니다. 변경 전 제어와 실험 기록을 정지하고, 한 번에 한 항목만 바꾼 뒤 동일 조건으로 반복 검증하십시오.</p>
+      </article>
+    </section>
+
+    <section class="workspace-grid experiment-grid">
+      <article class="panel experiment-panel">
+        <div class="panel-heading"><div><p class="kicker">MEASURED RUNS ONLY</p><h2>실험 기록</h2></div><span id="experiment-state" class="badge">대기</span></div>
+        <label>실험 메모<input id="experiment-notes" placeholder="초기 조건, 기계 변경, 관찰 사항"></label>
+        <div class="button-row">
+          <button id="start-experiment" class="button primary">기록 시작</button>
+          <button id="finish-experiment" class="button warning">기록 종료·평가</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>실험</th><th>게인 출처</th><th>안정 시간</th><th>RMS 각도</th><th>검출률</th><th>결과</th></tr></thead><tbody id="experiment-table"></tbody></table>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
+

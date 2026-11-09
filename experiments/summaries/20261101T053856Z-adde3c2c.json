@@ -1,0 +1,822 @@
+{
+  "schema_version": 1,
+  "experiment_id": "20261101T053856Z-adde3c2c",
+  "started_utc": "2026-11-01T05:38:56.302193+00:00",
+  "finished_utc": "2026-11-01T05:39:41.718076+00:00",
+  "gains": {
+    "kp_angle": 26000.0,
+    "ki_angle": 0.0,
+    "kd_angle": 3300.0,
+    "kp_position": 7.7e-06,
+    "ki_position": 0.0,
+    "kd_position": 0.0001875
+  },
+  "notes": "Scheduled supervised capture240 swing-up; gain 46.0; surplus 0.045; alignment 0.0; stable hold 15.0s",
+  "log_file": "experiments/logs/20261101T053856Z-adde3c2c.csv",
+  "dropped_log_rows": 0,
+  "metrics": {
+    "duration_s": 45.35996364300013,
+    "sample_count": 4537,
+    "continuous_stable_time_s": 15.0299957310001,
+    "rms_angle_rad": 1.345504389272547,
+    "mean_abs_angle_rad": 0.8975993062387159,
+    "max_abs_angle_rad": 3.1558460011130087,
+    "angular_velocity_std_rad_s": 5.882358222308686,
+    "stabilization_success": true,
+    "mean_cart_deviation_mm": 39.0520978686306,
+    "max_cart_deviation_mm": 139.44432925156497,
+    "max_cart_speed_mm_s": 259.6512254521601,
+    "velocity_saturation_ratio": 0.08838439497465285,
+    "direction_reversals": 121,
+    "max_command_acceleration_mm_s2": 24253.595596014587,
+    "average_fps": 30.08681674323743,
+    "average_processing_ms": 3.967578802735948,
+    "average_control_latency_ms": 30.87075202953539,
+    "average_measurement_interval_ms": 9.999991984788387,
+    "marker_detection_rate": 1.0,
+    "tracking_loss_count": 0,
+    "output_saturation_ratio": 0.348908970685475,
+    "output_saturation_time_s": 15.829514932000848,
+    "failure_type": null,
+    "observations": [
+      {
+        "kind": "output_saturation",
+        "evidence": "controller output saturated for 34.9% of samples"
+      },
+      {
+        "kind": "possible_oscillation",
+        "evidence": "121 command direction reversals over 45.36s"
+      }
+    ]
+  },
+  "representative_series": [
+    {
+      "elapsed_s": 0.0034879669999554608,
+      "theta_rad": -3.134972291341051,
+      "omega_rad_s": 0.004420956135857842,
+      "cart_position_mm": 246.3147681614256,
+      "cart_velocity_mm_s": 1.1633914940682717,
+      "limited_velocity_mm_s": 0.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 0.5734438100000716,
+      "theta_rad": -3.151535716724779,
+      "omega_rad_s": -0.2916634227176113,
+      "cart_position_mm": 265.5258369364663,
+      "cart_velocity_mm_s": 17.661396681932782,
+      "limited_velocity_mm_s": -95.27950370758049,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 1.1534537239999736,
+      "theta_rad": -2.871709421627285,
+      "omega_rad_s": 2.1698118101438384,
+      "cart_position_mm": 189.5829532933048,
+      "cart_velocity_mm_s": 64.16307873179501,
+      "limited_velocity_mm_s": 224.97515700002623,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 1.7234536070000104,
+      "theta_rad": 2.4819651403071803,
+      "omega_rad_s": -0.20879144936973482,
+      "cart_position_mm": 216.25582095624281,
+      "cart_velocity_mm_s": -247.42114764010466,
+      "limited_velocity_mm_s": -240.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 2.303443523999931,
+      "theta_rad": -2.6071965461335678,
+      "omega_rad_s": -4.31291499487318,
+      "cart_position_mm": 235.59766335891766,
+      "cart_velocity_mm_s": 181.82489513547432,
+      "limited_velocity_mm_s": 53.47762979869796,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 2.8734430760000578,
+      "theta_rad": -3.040414231489001,
+      "omega_rad_s": 7.645330802715316,
+      "cart_position_mm": 169.73413370654126,
+      "cart_velocity_mm_s": -37.350384556952754,
+      "limited_velocity_mm_s": 104.99985900015417,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 3.453449679999949,
+      "theta_rad": 2.1070762103070577,
+      "omega_rad_s": -7.144393133458246,
+      "cart_position_mm": 246.80290602458146,
+      "cart_velocity_mm_s": -94.99046673631727,
+      "limited_velocity_mm_s": -201.93893926594663,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 4.023460698000008,
+      "theta_rad": -1.8393414363015532,
+      "omega_rad_s": 7.286888739695871,
+      "cart_position_mm": 191.7227214242103,
+      "cart_velocity_mm_s": 182.46553416118226,
+      "limited_velocity_mm_s": 240.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 4.593445957000085,
+      "theta_rad": 1.4093473150029712,
+      "omega_rad_s": -4.867620024224083,
+      "cart_position_mm": 192.48366762212234,
+      "cart_velocity_mm_s": -241.8988331357612,
+      "limited_velocity_mm_s": -187.1707862984531,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 5.173445955000034,
+      "theta_rad": -1.2860331097308237,
+      "omega_rad_s": 4.525921393793469,
+      "cart_position_mm": 207.74397090343845,
+      "cart_velocity_mm_s": 224.23936134457838,
+      "limited_velocity_mm_s": 149.9983754998675,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 5.743444328000123,
+      "theta_rad": 1.2653092378647848,
+      "omega_rad_s": -6.0681829982475595,
+      "cart_position_mm": 212.32466017721515,
+      "cart_velocity_mm_s": -243.6026947924032,
+      "limited_velocity_mm_s": -150.05279249975501,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 6.323458753000068,
+      "theta_rad": -1.2630176269089934,
+      "omega_rad_s": 6.951409819851719,
+      "cart_position_mm": 224.1981442838609,
+      "cart_velocity_mm_s": 249.688216585465,
+      "limited_velocity_mm_s": 180.03219599994736,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 6.893459870000015,
+      "theta_rad": 1.844144894975421,
+      "omega_rad_s": -10.70515306351203,
+      "cart_position_mm": 234.35709046656413,
+      "cart_velocity_mm_s": -153.87346311576812,
+      "limited_velocity_mm_s": -240.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 7.463451581000072,
+      "theta_rad": 2.5688009345384746,
+      "omega_rad_s": 12.312291448383418,
+      "cart_position_mm": 206.61955760995278,
+      "cart_velocity_mm_s": -75.48433247936329,
+      "limited_velocity_mm_s": 18.98553507223282,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 8.04344521400003,
+      "theta_rad": -0.49854459804673423,
+      "omega_rad_s": -0.8461777152385958,
+      "cart_position_mm": 236.42285408269453,
+      "cart_velocity_mm_s": -165.21899413805616,
+      "limited_velocity_mm_s": -130.93099662740877,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 8.613445889000104,
+      "theta_rad": 0.8470574768219712,
+      "omega_rad_s": -5.351247278600694,
+      "cart_position_mm": 230.86076279556264,
+      "cart_velocity_mm_s": -72.36271994468059,
+      "limited_velocity_mm_s": 62.55937797426161,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 9.193466155000124,
+      "theta_rad": -2.449387224723511,
+      "omega_rad_s": 13.463587498079713,
+      "cart_position_mm": 290.26420591855924,
+      "cart_velocity_mm_s": 50.871009611747255,
+      "limited_velocity_mm_s": 153.6063857089555,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 9.763452463000021,
+      "theta_rad": -0.267590853028262,
+      "omega_rad_s": -0.33780314582620824,
+      "cart_position_mm": 328.73055306212274,
+      "cart_velocity_mm_s": -158.81533646559836,
+      "limited_velocity_mm_s": -163.2514263506196,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 10.343444378999948,
+      "theta_rad": 1.221863885658413,
+      "omega_rad_s": -8.647943806457855,
+      "cart_position_mm": 335.28513337417525,
+      "cart_velocity_mm_s": 29.36414465861351,
+      "limited_velocity_mm_s": -40.18370486450045,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 10.913445040999932,
+      "theta_rad": 1.4462327883140613,
+      "omega_rad_s": 8.872307131534065,
+      "cart_position_mm": 368.60214960424025,
+      "cart_velocity_mm_s": -105.6890442252689,
+      "limited_velocity_mm_s": -240.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 11.483473464000099,
+      "theta_rad": -0.45895655068558133,
+      "omega_rad_s": 0.3409348935113379,
+      "cart_position_mm": 272.10021840836174,
+      "cart_velocity_mm_s": -231.68299120097407,
+      "limited_velocity_mm_s": -237.20051621583983,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 12.063452495000092,
+      "theta_rad": 0.8196725243479267,
+      "omega_rad_s": -5.723197278981543,
+      "cart_position_mm": 210.94275880550677,
+      "cart_velocity_mm_s": -152.55796272884461,
+      "limited_velocity_mm_s": -112.77367780298087,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 12.633447753999917,
+      "theta_rad": 0.012136072503212948,
+      "omega_rad_s": -0.2895119945461467,
+      "cart_position_mm": 273.60561651367345,
+      "cart_velocity_mm_s": 257.52928300709004,
+      "limited_velocity_mm_s": 240.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 13.213446028000135,
+      "theta_rad": 0.21053978253632452,
+      "omega_rad_s": 1.1783177397916191,
+      "cart_position_mm": 380.8925498118667,
+      "cart_velocity_mm_s": 150.15903328437247,
+      "limited_velocity_mm_s": 0.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 13.783476789000133,
+      "theta_rad": -1.1018233281257315,
+      "omega_rad_s": 7.591701081514648,
+      "cart_position_mm": 317.7945266270405,
+      "cart_velocity_mm_s": -178.5828410775483,
+      "limited_velocity_mm_s": -133.20709724988785,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 14.353480106999996,
+      "theta_rad": -2.06155357648921,
+      "omega_rad_s": -12.181571391391522,
+      "cart_position_mm": 240.3178613213825,
+      "cart_velocity_mm_s": 29.000668934102052,
+      "limited_velocity_mm_s": 10.289876712331647,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 14.933450754999967,
+      "theta_rad": 0.19533268692251224,
+      "omega_rad_s": -0.8651133520575638,
+      "cart_position_mm": 246.99813808671038,
+      "cart_velocity_mm_s": 185.14657315191306,
+      "limited_velocity_mm_s": 194.76702095971018,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 15.503445817000056,
+      "theta_rad": -2.575795604927669,
+      "omega_rad_s": 13.728602895125245,
+      "cart_position_mm": 251.0889188695187,
+      "cart_velocity_mm_s": -228.39930974575162,
+      "limited_velocity_mm_s": -149.99826150004992,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 16.08346563400005,
+      "theta_rad": -0.9137532843010701,
+      "omega_rad_s": -4.277103896876155,
+      "cart_position_mm": 166.65469829421656,
+      "cart_velocity_mm_s": -172.88697684216794,
+      "limited_velocity_mm_s": -22.18086685621344,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 16.65345954899999,
+      "theta_rad": 0.33988850889630456,
+      "omega_rad_s": -2.148931409002346,
+      "cart_position_mm": 140.20725727679698,
+      "cart_velocity_mm_s": 98.3666461121768,
+      "limited_velocity_mm_s": 227.87354229474883,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 17.23344579500008,
+      "theta_rad": 1.5717451966579725,
+      "omega_rad_s": 10.111952862958562,
+      "cart_position_mm": 226.37874476977825,
+      "cart_velocity_mm_s": -77.50929070627026,
+      "limited_velocity_mm_s": -157.61172402181617,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 17.803444768999952,
+      "theta_rad": -0.5186343278774221,
+      "omega_rad_s": 0.01871068589619229,
+      "cart_position_mm": 170.41089192135578,
+      "cart_velocity_mm_s": -206.32149593103455,
+      "limited_velocity_mm_s": -222.29855020846634,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 18.373444891999952,
+      "theta_rad": 0.8875105136169928,
+      "omega_rad_s": -5.887939798846464,
+      "cart_position_mm": 163.457565416765,
+      "cart_velocity_mm_s": -70.58317987069093,
+      "limited_velocity_mm_s": -36.50055231741618,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 18.954942846999984,
+      "theta_rad": 1.4711613933893728,
+      "omega_rad_s": 9.185613954844746,
+      "cart_position_mm": 229.3867040679202,
+      "cart_velocity_mm_s": 17.636025923632715,
+      "limited_velocity_mm_s": -131.66442038439547,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 19.523457581000002,
+      "theta_rad": -0.3652618795091771,
+      "omega_rad_s": 1.0675650173379578,
+      "cart_position_mm": 226.41323522586703,
+      "cart_velocity_mm_s": -106.63441369989857,
+      "limited_velocity_mm_s": -186.68961287572094,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 20.103451425999992,
+      "theta_rad": 1.4880107659700983,
+      "omega_rad_s": -9.767926915235538,
+      "cart_position_mm": 215.1510096732342,
+      "cart_velocity_mm_s": 34.224297810022414,
+      "limited_velocity_mm_s": -67.26534940047151,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 20.673448089999965,
+      "theta_rad": 1.1508293855958212,
+      "omega_rad_s": 6.378940372718342,
+      "cart_position_mm": 277.2157795113127,
+      "cart_velocity_mm_s": 77.20277692253204,
+      "limited_velocity_mm_s": -59.5698251845086,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 21.24345792300005,
+      "theta_rad": -0.3860647649262774,
+      "omega_rad_s": 1.8316435976977432,
+      "cart_position_mm": 268.28900208188765,
+      "cart_velocity_mm_s": -127.43866902423261,
+      "limited_velocity_mm_s": -213.22909027994598,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 21.823457104,
+      "theta_rad": 1.8075799882345238,
+      "omega_rad_s": -11.610337937683404,
+      "cart_position_mm": 223.83152622285752,
+      "cart_velocity_mm_s": 25.924689217847515,
+      "limited_velocity_mm_s": -28.254133305211166,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 22.393455958000004,
+      "theta_rad": 0.6577123379884575,
+      "omega_rad_s": 3.48522863898628,
+      "cart_position_mm": 294.3693272759357,
+      "cart_velocity_mm_s": 165.77839514664538,
+      "limited_velocity_mm_s": 53.05833782707387,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 22.97344643800011,
+      "theta_rad": -0.47498542556237905,
+      "omega_rad_s": 2.956338437523852,
+      "cart_position_mm": 295.7312794286268,
+      "cart_velocity_mm_s": 32.76560371592113,
+      "limited_velocity_mm_s": -57.13746980614697,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 23.543447257000025,
+      "theta_rad": -2.4057931217128607,
+      "omega_rad_s": -13.80202535462485,
+      "cart_position_mm": 264.33261794815616,
+      "cart_velocity_mm_s": 171.4631552263267,
+      "limited_velocity_mm_s": 157.7502326110506,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 24.123500665999927,
+      "theta_rad": 0.5226662131866127,
+      "omega_rad_s": 1.174343156767605,
+      "cart_position_mm": 338.62341351663457,
+      "cart_velocity_mm_s": 245.21873361536862,
+      "limited_velocity_mm_s": 147.2317863230855,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 24.69346443099994,
+      "theta_rad": -0.5465012158536137,
+      "omega_rad_s": 4.534183288909223,
+      "cart_position_mm": 381.884044737355,
+      "cart_velocity_mm_s": 38.181484130454024,
+      "limited_velocity_mm_s": -53.87025154070325,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 25.263449864999984,
+      "theta_rad": 0.12596324038264142,
+      "omega_rad_s": 0.27531176023120585,
+      "cart_position_mm": 381.72006314425744,
+      "cart_velocity_mm_s": 210.78332182105277,
+      "limited_velocity_mm_s": 0.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 25.843446701999937,
+      "theta_rad": -1.5251935385459667,
+      "omega_rad_s": 10.217744346297417,
+      "cart_position_mm": 312.26224807087067,
+      "cart_velocity_mm_s": -232.0733410727738,
+      "limited_velocity_mm_s": -136.83845774172215,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 26.413446841999985,
+      "theta_rad": -2.104135527917358,
+      "omega_rad_s": -12.034908893159425,
+      "cart_position_mm": 218.0099537157168,
+      "cart_velocity_mm_s": 17.919514949645368,
+      "limited_velocity_mm_s": -14.547084616855694,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 26.99345558999994,
+      "theta_rad": 0.17090486471837613,
+      "omega_rad_s": -1.0037196910012585,
+      "cart_position_mm": 159.9956671393658,
+      "cart_velocity_mm_s": 66.62700088238192,
+      "limited_velocity_mm_s": 142.9039338860488,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 27.56345158399995,
+      "theta_rad": 0.1386092670309221,
+      "omega_rad_s": 0.7853599319645045,
+      "cart_position_mm": 286.60439944621606,
+      "cart_velocity_mm_s": 255.5478807562897,
+      "limited_velocity_mm_s": 240.0,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 28.133446652999964,
+      "theta_rad": -1.5913623762053377,
+      "omega_rad_s": 10.6344700402834,
+      "cart_position_mm": 333.15831010657064,
+      "cart_velocity_mm_s": 18.39598815806524,
+      "limited_velocity_mm_s": 86.13902678939006,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 28.713447663000125,
+      "theta_rad": -0.47259937435665045,
+      "omega_rad_s": -2.287098344439353,
+      "cart_position_mm": 278.90856640433833,
+      "cart_velocity_mm_s": -181.5318883817148,
+      "limited_velocity_mm_s": -64.95229824710056,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 29.28349032699998,
+      "theta_rad": 0.7021889622228831,
+      "omega_rad_s": -3.9865390451330667,
+      "cart_position_mm": 291.3867319055052,
+      "cart_velocity_mm_s": -16.39628493583688,
+      "limited_velocity_mm_s": 128.64509417207762,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 29.86345059900009,
+      "theta_rad": -1.9308474779373284,
+      "omega_rad_s": 12.018641575832534,
+      "cart_position_mm": 348.7729080397457,
+      "cart_velocity_mm_s": 82.22942292573308,
+      "limited_velocity_mm_s": 170.18121838211988,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 30.43345380300002,
+      "theta_rad": 0.0016984916301460116,
+      "omega_rad_s": 0.5113164395708975,
+      "cart_position_mm": 308.8165780158806,
+      "cart_velocity_mm_s": -209.68418799080413,
+      "limited_velocity_mm_s": -151.40085108958505,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 31.01346326199996,
+      "theta_rad": 0.01702060808518999,
+      "omega_rad_s": 0.023581642180583076,
+      "cart_position_mm": 247.19033410964104,
+      "cart_velocity_mm_s": -68.98616432386096,
+      "limited_velocity_mm_s": -56.750018727448015,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 31.583457097000064,
+      "theta_rad": 0.007284208270403068,
+      "omega_rad_s": 0.003574715686653891,
+      "cart_position_mm": 231.45895455048327,
+      "cart_velocity_mm_s": 2.1836195244388934,
+      "limited_velocity_mm_s": 13.092512947229176,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 32.1534589150001,
+      "theta_rad": -0.0012808508322903617,
+      "omega_rad_s": -0.02742064553917232,
+      "cart_position_mm": 251.50869199127015,
+      "cart_velocity_mm_s": 54.26604549197733,
+      "limited_velocity_mm_s": 60.78800652701253,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 32.73345024900004,
+      "theta_rad": -0.007797534270807563,
+      "omega_rad_s": -0.016034419619487733,
+      "cart_position_mm": 273.5513080763889,
+      "cart_velocity_mm_s": 14.296485891585085,
+      "limited_velocity_mm_s": 0.751147584638435,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 33.30344705099992,
+      "theta_rad": 0.000370294582045615,
+      "omega_rad_s": 0.002114554868701075,
+      "cart_position_mm": 268.5507500415249,
+      "cart_velocity_mm_s": -16.194540804758688,
+      "limited_velocity_mm_s": -19.185484204110598,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 33.88346160900005,
+      "theta_rad": 0.005141390648900006,
+      "omega_rad_s": 0.06127155585420093,
+      "cart_position_mm": 254.07575171687705,
+      "cart_velocity_mm_s": -34.09095340465519,
+      "limited_velocity_mm_s": -22.630256120992556,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 34.453462689999924,
+      "theta_rad": 0.003658564122079379,
+      "omega_rad_s": 0.030019678437050404,
+      "cart_position_mm": 246.06386562849627,
+      "cart_velocity_mm_s": -6.513120316764992,
+      "limited_velocity_mm_s": 1.805612493455583,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 35.02345364300004,
+      "theta_rad": -0.009548472875176253,
+      "omega_rad_s": 0.03476526002159562,
+      "cart_position_mm": 255.7300617956268,
+      "cart_velocity_mm_s": 7.802863442826377,
+      "limited_velocity_mm_s": 1.0316761564279484,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 35.6034490940001,
+      "theta_rad": 0.00340328220989705,
+      "omega_rad_s": 0.04245683738414066,
+      "cart_position_mm": 250.03999730941288,
+      "cart_velocity_mm_s": -18.460492403253493,
+      "limited_velocity_mm_s": -25.297167542727127,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 36.173451659999955,
+      "theta_rad": 0.0009431043977335598,
+      "omega_rad_s": -0.008541550781739082,
+      "cart_position_mm": 246.94590202534084,
+      "cart_velocity_mm_s": 6.967900581672522,
+      "limited_velocity_mm_s": -0.6655720391586035,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 36.7541148360001,
+      "theta_rad": 0.0028863272559718264,
+      "omega_rad_s": 0.06336582883095286,
+      "cart_position_mm": 250.75579547214596,
+      "cart_velocity_mm_s": 11.033239548894262,
+      "limited_velocity_mm_s": 13.339516086585014,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 37.32345018199999,
+      "theta_rad": -0.004766277325092183,
+      "omega_rad_s": 0.06970447161301399,
+      "cart_position_mm": 259.3745192229986,
+      "cart_velocity_mm_s": 5.51876212582947,
+      "limited_velocity_mm_s": -2.7900467861741793,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 37.90344706299993,
+      "theta_rad": -0.0006133375425142109,
+      "omega_rad_s": 0.06549776131151518,
+      "cart_position_mm": 254.05000637160575,
+      "cart_velocity_mm_s": -23.070450122935785,
+      "limited_velocity_mm_s": -26.08577959339009,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 38.473447134000025,
+      "theta_rad": 0.010809428989107283,
+      "omega_rad_s": 0.030617243119420712,
+      "cart_position_mm": 240.3178613213825,
+      "cart_velocity_mm_s": -26.846089961819768,
+      "limited_velocity_mm_s": -2.2669935117077413,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 39.04344772400009,
+      "theta_rad": 0.006263136958331309,
+      "omega_rad_s": 0.15878385969266928,
+      "cart_position_mm": 235.17742802237663,
+      "cart_velocity_mm_s": -36.48668634259881,
+      "limited_velocity_mm_s": -29.47636501481752,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 39.62345494200008,
+      "theta_rad": 0.0045760750586768244,
+      "omega_rad_s": 0.017637479900195707,
+      "cart_position_mm": 233.94379706267713,
+      "cart_velocity_mm_s": 30.594666101704817,
+      "limited_velocity_mm_s": 39.72744188284118,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 40.19345681300001,
+      "theta_rad": -0.001374494739707275,
+      "omega_rad_s": 0.059919819256452365,
+      "cart_position_mm": 242.1806197795473,
+      "cart_velocity_mm_s": -31.427634952469543,
+      "limited_velocity_mm_s": -9.57577705100813,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 40.77344862500013,
+      "theta_rad": 0.006680271359084139,
+      "omega_rad_s": -0.022348298395437713,
+      "cart_position_mm": 233.04288130802644,
+      "cart_velocity_mm_s": 2.2545813409753475,
+      "limited_velocity_mm_s": 14.310094565706843,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 41.3434453320001,
+      "theta_rad": 0.0025965971546635866,
+      "omega_rad_s": -0.03360821623404748,
+      "cart_position_mm": 236.14088327806326,
+      "cart_velocity_mm_s": 7.67269210329633,
+      "limited_velocity_mm_s": 9.60156750192505,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 41.91345198299996,
+      "theta_rad": -0.00592502983532722,
+      "omega_rad_s": 0.0009006807593204338,
+      "cart_position_mm": 243.5362398093112,
+      "cart_velocity_mm_s": 8.063879840284326,
+      "limited_velocity_mm_s": -1.0327211591999974,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 42.49346509499992,
+      "theta_rad": 0.0005304700801726566,
+      "omega_rad_s": 0.01623096225873763,
+      "cart_position_mm": 234.288589352066,
+      "cart_velocity_mm_s": -25.19427565894994,
+      "limited_velocity_mm_s": -19.0116019865081,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 43.06344732299999,
+      "theta_rad": 0.013339004638644628,
+      "omega_rad_s": 0.08980688414231143,
+      "cart_position_mm": 215.88276320791724,
+      "cart_velocity_mm_s": -19.780942574717038,
+      "limited_velocity_mm_s": -12.188501463726908,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 43.64345136399993,
+      "theta_rad": -0.00028560459967000296,
+      "omega_rad_s": -0.023078824133092965,
+      "cart_position_mm": 225.0771486259268,
+      "cart_velocity_mm_s": 44.50851379494378,
+      "limited_velocity_mm_s": 49.12180176653269,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 44.21345468699997,
+      "theta_rad": -0.013432611669359324,
+      "omega_rad_s": -0.02107550614478748,
+      "cart_position_mm": 252.15210513880416,
+      "cart_velocity_mm_s": 34.40762838448847,
+      "limited_velocity_mm_s": 12.394939178283051,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 44.793457377000095,
+      "theta_rad": -0.0013904283421531972,
+      "omega_rad_s": 0.011230917782197286,
+      "cart_position_mm": 251.7813445982576,
+      "cart_velocity_mm_s": -11.442791215449077,
+      "limited_velocity_mm_s": -23.092686042192383,
+      "tracking_valid": true
+    },
+    {
+      "elapsed_s": 45.363451610000084,
+      "theta_rad": 0.008566348818041043,
+      "omega_rad_s": 0.04449173763886818,
+      "cart_position_mm": 238.89509688320314,
+      "cart_velocity_mm_s": -23.296675738727078,
+      "limited_velocity_mm_s": -2.3644212638298727,
+      "tracking_valid": true
+    }
+  ],
+  "context": {
+    "calibration_profile": "angle-reference-20261101",
+    "recalibration_count": 0,
+    "gain_source": "rollback",
+    "swing_up_settings": {
+      "enabled": true,
+      "mode": "idle",
+      "energy_error": null,
+      "swing_elapsed_s": 0.0,
+      "fault": null,
+      "pendulum_length_m": 0.187,
+      "capture_angle_rad": 0.22,
+      "capture_omega_rad_s": 1.5,
+      "capture_velocity_headroom_fraction": 0.2,
+      "max_velocity_mm_s": 240.0,
+      "balance_max_velocity_mm_s": 240.0,
+      "max_acceleration_mm_s2": 1500.0,
+      "max_cart_excursion_mm": 160.0,
+      "max_duration_s": 30.0,
+      "energy_gain": 46.0,
+      "energy_target_margin": 0.045,
+      "energy_rate_lag_s": 0.0,
+      "prediction_camera_latency_s": 0.0,
+      "balance_prediction_camera_latency_s": 0.02,
+      "balance_rate_lag_s": 0.03,
+      "prediction_damping_s": 0.06,
+      "prediction_coulomb_rad_s2": 0.36,
+      "predicted_theta_rad": null,
+      "predicted_omega_rad_s": null,
+      "kick_acceleration_mm_s2": 200.0,
+      "kick_duration_s": 0.3,
+      "kick_direction": 1.0,
+      "cart_position_gain_s2": 3.2,
+      "cart_velocity_gain_s": 3.0,
+      "upright_centering_window_rad": 0.0
+    },
+    "video": {
+      "enabled": true,
+      "path": "experiments/videos/20261101T053856Z-adde3c2c.avi",
+      "frames_written": 1361,
+      "frames_dropped": 0,
+      "error": null
+    },
+    "safety_state": "IDLE",
+    "safety_reason": "experiment complete",
+    "camera_error": null,
+    "control_error": null
+  }
+}

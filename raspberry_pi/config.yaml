@@ -1,0 +1,140 @@
+hardware:
+  # Deliberately false: enabling this can move real hardware.
+  enabled: false
+  serial_port: /dev/ttyACM0
+  baudrate: 115200
+  serial_timeout_s: 0.1
+  heartbeat_period_s: 0.10
+  watchdog_s: 0.40
+camera:
+  enabled: true
+  index: 0
+  # Validated on the deployed C922: MJPEG 640x480 at 30 FPS stayed stable for 10 minutes.
+  # Do not restore 1280x720 at 60 FPS until the observed USB disconnect is resolved.
+  fourcc: MJPG
+  width: 640
+  height: 480
+  fps: 30
+  exposure: null
+  gain: null
+  white_balance: null
+  jpeg_quality: 78
+  dashboard_fps: 20
+  mask_preview_fps: 5
+  max_frame_age_s: 0.18
+tracking:
+  profile: default
+  min_confidence: 0.55
+  morphology_kernel: 5
+  ambiguous_area_ratio: 0.72
+  brightness_roi_fraction: null
+  brightness_warning_delta: 28
+  brightness_stop_delta: 55
+  bounded_value_adjustment: 18
+coordinates:
+  rail_left_px: null
+  rail_right_px: null
+  rail_length_mm: 500.0
+  camera_x_sign: 1
+  pivot_y_px: null
+  vertical_offset_rad: 0.0
+  pendulum_length_mm: null
+estimator:
+  derivative_cutoff_hz: 12.0
+  maximum_dt_s: 0.12
+  pendulum_length_tolerance_ratio: 0.40
+controller:
+  loop_hz: 100
+  # "velocity" preserves the legacy behavior.  Real inverted-pendulum
+  # commissioning should use "acceleration" so angle feedback can generate a
+  # restoring cart acceleration before it is integrated to a velocity target.
+  output_mode: velocity
+  output_sign: 1
+  position_output_sign: 1
+  cart_center_mm: 250.0
+  engage_angle_rad: 0.20
+  fail_angle_rad: 0.52
+  max_angle_setpoint_rad: 0.10
+  max_velocity_mm_s: 600.0
+  max_acceleration_mm_s2: 2000.0
+  derivative_cutoff_hz: 18.0
+  anti_windup_gain: 0.35
+  swing_up:
+    # Enabled only after supervised balance-gain calibration; the start API
+    # refuses to run without approved angle Kp and Kd gains.
+    enabled: false
+    pendulum_length_m: 0.226
+    energy_gain: 1.0
+    # Small normalized energy surplus can offset measured bearing friction.
+    # Zero preserves the ideal separatrix target; supervised tuning bounds 0..0.05.
+    energy_target_margin: 0.0
+    # Align angle history with a measured delay in the rate estimator.
+    energy_rate_lag_s: 0.0
+    # Optional short model propagation to compensate measured image latency.
+    # Uses admitted acceleration history and never predicts rail safety state.
+    prediction_camera_latency_s: 0.0
+    # Separate forecast used only after a raw-vision balance capture.
+    balance_prediction_camera_latency_s: 0.0
+    # Null inherits energy_rate_lag_s; an explicit value affects balance only.
+    balance_rate_lag_s: null
+    prediction_damping_s: 0.0
+    prediction_coulomb_rad_s2: 0.0
+    reference_omega_rad_s: 8.0
+    max_acceleration_mm_s2: 250.0
+    max_velocity_mm_s: 100.0
+    # Omit to use the swing speed in balance too; an explicit value can reserve
+    # balance authority up to controller.max_velocity_mm_s.
+    capture_angle_rad: 0.16
+    capture_omega_rad_s: 1.5
+    # Optional local linear feasibility check before PID handoff; zero disables.
+    capture_velocity_headroom_fraction: 0.0
+    release_angle_rad: 0.28
+    max_omega_rad_s: 16.0
+    kick_acceleration_mm_s2: 60.0
+    kick_duration_s: 0.15
+    kick_direction: 1.0
+    # Only kick near the hanging equilibrium, never through an upright pass.
+    kick_downward_tolerance_rad: 0.35
+    kick_omega_rad_s: 0.15
+    # SI-derived cart centering gains; output acceleration is in mm/s^2.
+    cart_position_gain_s2: 0.8
+    cart_velocity_gain_s: 1.5
+    centering_acceleration_fraction: 0.3
+    # Fade cart centering inside this upright angle; zero preserves full centering.
+    upright_centering_window_rad: 0.0
+    # Total time spent energy shaping, including recovery attempts.
+    max_duration_s: 30.0
+    max_cart_excursion_mm: 160.0
+    maximum_state_age_s: 0.12
+  gains:
+    kp_angle: 0.0
+    ki_angle: 0.0
+    kd_angle: 0.0
+    kp_position: 0.0
+    ki_position: 0.0
+    kd_position: 0.0
+safety:
+  require_clean_pi_power: true
+  power_poll_s: 1.0
+  rail_min_mm: 10.0
+  rail_max_mm: 490.0
+  braking_acceleration_mm_s2: 2000.0
+  braking_margin_mm: 25.0
+  command_latency_s: 0.08
+  tracking_grace_s: 0.12
+logging:
+  queue_size: 10000
+  flush_period_s: 0.5
+  record_video: true
+  video_codec: MJPG
+  video_queue_size: 24
+  stable_angle_rad: 0.0872665
+  success_time_s: 5.0
+  cart_center_mm: 250.0
+  velocity_limit_mm_s: 600.0
+web:
+  host: 127.0.0.1
+  port: 8000
+  require_operator_token: false
+  operator_token_env: CARTPOLE_OPERATOR_TOKEN
+

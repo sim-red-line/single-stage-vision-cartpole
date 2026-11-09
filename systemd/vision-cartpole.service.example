@@ -1,0 +1,20 @@
+[Unit]
+Description=Vision Cart-Pole controller and dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/opt/vision-cartpole
+EnvironmentFile=-/opt/vision-cartpole/.env
+ExecStart=/opt/vision-cartpole/.venv/bin/python -m raspberry_pi.main --config /opt/vision-cartpole/config.local.yaml
+Restart=on-failure
+RestartSec=3
+
+# Adjust device access through the dialout/video groups rather than running as root.
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

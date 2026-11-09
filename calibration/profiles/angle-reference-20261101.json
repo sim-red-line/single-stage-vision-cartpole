@@ -1,0 +1,73 @@
+{
+  "name": "angle-reference-20261101",
+  "markers": [
+    {
+      "name": "pivot",
+      "role": "pivot",
+      "hsv_ranges": [
+        {
+          "lower": [
+            96,
+            160,
+            50
+          ],
+          "upper": [
+            115,
+            255,
+            230
+          ]
+        }
+      ],
+      "min_area_px": 30.0,
+      "max_area_px": 240.0,
+      "sample_hsv_median": [
+        106.0,
+        239.0,
+        105.5
+      ],
+      "required": true
+    },
+    {
+      "name": "tip",
+      "role": "pendulum_tip",
+      "hsv_ranges": [
+        {
+          "lower": [
+            152,
+            30,
+            30
+          ],
+          "upper": [
+            179,
+            220,
+            255
+          ]
+        }
+      ],
+      "min_area_px": 16.0,
+      "max_area_px": 250.0,
+      "sample_hsv_median": [
+        166.0,
+        97.0,
+        136.0
+      ],
+      "required": true
+    }
+  ],
+  "coordinates": {
+    "rail_left_px": 147.08,
+    "rail_right_px": 478.51,
+    "rail_length_mm": 512.738,
+    "camera_x_sign": 1,
+    "pivot_y_px": 251.346,
+    "vertical_offset_rad": 0.012699820732761161,
+    "pendulum_length_mm": null,
+    "homography": null,
+    "vertical_offset_slope_rad_per_mm": -8.074014633257968e-05,
+    "vertical_offset_reference_mm": 256.369
+  },
+  "baseline_brightness": 102.0,
+  "created_at": "2026-11-01T05:29:34.725085+00:00",
+  "notes": "Angle-only candidate from paired-direction passive hanging traces. Rail position mapping, HSV markers and brightness reference unchanged. Direction pairing suppresses hysteresis/rolling-readout bias; independent upright accuracy remains unmeasured.",
+  "schema_version": 1
+}

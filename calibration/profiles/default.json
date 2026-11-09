@@ -1,0 +1,51 @@
+{
+  "name": "default",
+  "markers": [
+    {
+      "name": "pivot",
+      "role": "pivot",
+      "hsv_ranges": [
+        {
+          "lower": [97, 100, 25],
+          "upper": [112, 255, 235]
+        }
+      ],
+      "min_area_px": 60.0,
+      "max_area_px": 240.0,
+      "sample_hsv_median": [102.0, 230.0, 140.0],
+      "required": true
+    },
+    {
+      "name": "tip",
+      "role": "pendulum_tip",
+      "hsv_ranges": [
+        {
+          "lower": [166, 45, 30],
+          "upper": [179, 225, 240]
+        },
+        {
+          "lower": [0, 45, 30],
+          "upper": [4, 225, 240]
+        }
+      ],
+      "min_area_px": 50.0,
+      "max_area_px": 250.0,
+      "sample_hsv_median": [172.0, 90.0, 160.0],
+      "required": true
+    }
+  ],
+  "coordinates": {
+    "rail_left_px": 147.08,
+    "rail_right_px": 478.51,
+    "rail_length_mm": 512.738,
+    "camera_x_sign": 1,
+    "pivot_y_px": 251.346,
+    "vertical_offset_rad": 0.01037155,
+    "pendulum_length_mm": null,
+    "homography": null
+  },
+  "baseline_brightness": 155.0,
+  "created_at": "2026-10-30T09:18:00Z",
+  "notes": "Supervised commissioning calibration. Camera mapping fit from low-speed homing; 769 frames, 1.458 px RMSE. Upright offset measured from 90 stable frames; 0.594 deg median, 0.052 deg median absolute spread. Verify live again before arming.",
+  "schema_version": 1
+}

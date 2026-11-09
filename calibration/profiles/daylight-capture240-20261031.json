@@ -1,0 +1,71 @@
+{
+  "name": "daylight-capture240-20261031",
+  "markers": [
+    {
+      "name": "pivot",
+      "role": "pivot",
+      "hsv_ranges": [
+        {
+          "lower": [
+            96,
+            160,
+            50
+          ],
+          "upper": [
+            115,
+            255,
+            230
+          ]
+        }
+      ],
+      "min_area_px": 30.0,
+      "max_area_px": 240.0,
+      "sample_hsv_median": [
+        106.0,
+        239.0,
+        105.5
+      ],
+      "required": true
+    },
+    {
+      "name": "tip",
+      "role": "pendulum_tip",
+      "hsv_ranges": [
+        {
+          "lower": [
+            152,
+            30,
+            30
+          ],
+          "upper": [
+            179,
+            220,
+            255
+          ]
+        }
+      ],
+      "min_area_px": 35.0,
+      "max_area_px": 250.0,
+      "sample_hsv_median": [
+        166.0,
+        97.0,
+        136.0
+      ],
+      "required": true
+    }
+  ],
+  "coordinates": {
+    "rail_left_px": 147.08,
+    "rail_right_px": 478.51,
+    "rail_length_mm": 512.738,
+    "camera_x_sign": 1,
+    "pivot_y_px": 251.346,
+    "vertical_offset_rad": 0.01037155,
+    "pendulum_length_mm": null,
+    "homography": null
+  },
+  "baseline_brightness": 88.0,
+  "created_at": "2026-10-31T06:42:08.596256+00:00",
+  "notes": "Measured current background brightness after lighting-envelope stop; marker HSV, geometry and all lighting safeguards retained.",
+  "schema_version": 1
+}

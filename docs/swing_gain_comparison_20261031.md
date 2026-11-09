@@ -1,168 +1,88 @@
-# 고정 PID 스윙업 게인 비교 — 2026-10-31
+**English** | [한국어](ko/swing_gain_comparison_20261031.md)
 
-사용자 요청에 따라 PID 여섯 이득을 고정하고 에너지 게인만 32 → 40 → 48로
-비교했다. **5초 연속 ±5° 균형 목표는 아직 달성하지 않았다.**
-게인 48의 첫 시험에서 각속도 보호가 작동하여 반복 시험을 중단했다.
+# Fixed-PID Swing-Up Gain Comparison — 2026-10-31
 
-## 비교 조건과 실제 결과
+At the user's request, all six PID gains were held fixed while only the energy gain was compared at 32 → 40 → 48. **The target of five continuous seconds of balance within ±5° was not achieved.** Angular-velocity protection activated during the first gain-48 test, so repeat testing at that gain was stopped.
 
-- PID: 각도 26000 / 0 / 3300, 위치 0.0000077 / 0 / 0.0001875.
-- 240mm/s, 중앙 ±160mm, 스윙 가속도 1500mm/s², 균형 가속도 2000mm/s².
-- 에너지 여유 0.025, 시작 가속도 200mm/s²·0.3초, 위치/속도 복귀 이득 3.2/3.
-- 예측·에너지 시간 보정·수직 근처 중앙 복귀 옵션 모두 0.
-- 매회 260mm를 거쳐 오른쪽에서 244.35mm로 접근했다. 실제 시작 위치는
-  일곱 시험 모두 244.313mm였다. 진자 하향 정지·실시간 색점·전원 상태를 확인했다.
-- 기존 카메라 레일 좌표를 유지했다. 현재 영상 시작 좌표 245.43~246.21mm와
-  과거 최고 시험의 243.54mm는 다르므로 과거와 완전히 같은 환경이라는 뜻은 아니다.
-- 각 시험 최대 30초, 균형 확인을 포함한 전체 제한 35.5초. 모든 시험 종료 후
-  실제 속도·목표 속도 0을 확인했다. 영상·CSV·실제 제어 모드 기록을 보관했다.
+## Comparison Conditions and Physical Results
 
-상승 각도는 하향 0° / 수직 180° 기준이다. 균형 수치는 실제 `balance` 모드의
-유효 영상만 사용했다. 모드 경계는 약 50ms 표본 해상도를 가진다.
+- PID: angle 26000 / 0 / 3300; position 0.0000077 / 0 / 0.0001875.
+- 240 mm/s, center ±160 mm, swing-up acceleration 1500 mm/s², balance acceleration 2000 mm/s².
+- Energy margin 0.025, startup acceleration 200 mm/s² for 0.3 seconds, position/velocity return gains 3.2/3.
+- Prediction, energy timing compensation, and the near-upright centering option were all zero.
+- Before every run, the cart passed through 260 mm and approached 244.35 mm from the right. The actual initial position was 244.313 mm in all seven tests. A stationary downward pendulum, live color markers, and power state were verified.
+- The existing camera-to-rail mapping was retained. The current video start coordinate, 245.43–246.21 mm, differs from 243.54 mm in the previous best test, so these were not perfectly identical environments.
+- Each test allowed up to 30 seconds, with a 35.5-second total limit including balance verification. Zero actual and target velocity were confirmed after every run. Video, CSV, and actual control-mode logs were preserved.
 
-| 게인 | 실험 ID | 최대 상승 | 포착 | 가장 긴 균형 구간 | 연속 ±5° |
+Rise angle is measured with downward as 0° and upright as 180°. Balance metrics use only valid video samples in actual `balance` mode. Mode boundaries have approximately 50 ms sample resolution.
+
+| Gain | Experiment ID | Maximum rise | Capture | Longest balance interval | Continuous within ±5° |
 | --- | --- | ---: | --- | ---: | ---: |
-| 32 | 20261031T084851Z-1f73ccf4 | 168.56° | 없음 | 0 | 0 |
-| 32 | 20261031T085149Z-ea593eea | 179.96° | 있음 | 6.15초 | 4.03초 |
-| 32 | 20261031T085623Z-1a4aa5eb | 170.77° | 없음 | 0 | 0 |
-| 40 | 20261031T085919Z-68e16597 | 164.77° | 없음 | 0 | 0 |
-| 40 | 20261031T090243Z-e7a51200 | 178.66° | 없음 | 0 | 0 |
-| 40 | 20261031T090522Z-dfdc17d4 | 177.78° | 없음 | 0 | 0 |
-| 48 | 20261031T091208Z-4542d2ce | 179.66° | 있음 | 0.59초 | 0.42초 |
+| 32 | 20261031T084851Z-1f73ccf4 | 168.56° | No | 0 | 0 |
+| 32 | 20261031T085149Z-ea593eea | 179.96° | Yes | 6.15 s | 4.03 s |
+| 32 | 20261031T085623Z-1a4aa5eb | 170.77° | No | 0 | 0 |
+| 40 | 20261031T085919Z-68e16597 | 164.77° | No | 0 | 0 |
+| 40 | 20261031T090243Z-e7a51200 | 178.66° | No | 0 | 0 |
+| 40 | 20261031T090522Z-dfdc17d4 | 177.78° | No | 0 | 0 |
+| 48 | 20261031T091208Z-4542d2ce | 179.66° | Yes | 0.59 s | 0.42 s |
 
-게인 32의 포착 시험은 균형 구간 RMS 2.34°, 속도 포화 약 5.1%였다.
-35.5초 전체 제한으로 종료했으므로 그 시점까지 균형을 유지했지만, 연속 ±5°는
-4.03초에 그쳤다. 이전 최고 실험의 4.55초 기록과 혼동하지 않는다.
+The gain-32 capture test had 2.34° RMS during balance and approximately 5.1% velocity saturation. It ended at the 35.5-second overall limit while still in balance, but its continuous interval within ±5° was only 4.03 seconds. This must not be confused with the 4.55-second record from the previous best experiment.
 
-상승 각도의 중앙값은 32에서 170.77°, 40에서 177.78°로 높아졌다. 하지만 포착은
-각각 1/3, 0/3이다. 표본이 작고 편차가 커서 게인 증가가 유효하다고 결론내리지 않는다.
-특히 게인 40의 수직 근처 통과는 실제 카트 잔류 속도 또는 레일 여유 부족을 동반했다.
-포착 각속도 조건 1.5rad/s를 넓히지 않았다. 포착 없는 시험은 PID 품질 점수로 쓰지 않았다.
+Median rise angle increased from 170.77° at gain 32 to 177.78° at gain 40, but capture rates were 1/3 and 0/3, respectively. The sample is small and variable, so it does not establish that increasing gain is effective. In particular, near-upright passages at gain 40 were accompanied by residual cart velocity or insufficient rail headroom. The 1.5 rad/s capture angular-velocity condition was not widened. Runs without capture were not used to score PID quality.
 
-## 게인 48 중단과 카메라 시각 수정
+## Gain-48 Stop and Camera-Timestamp Correction
 
-게인 48의 첫 시험은 약 28.75초에 `swing-up angular-speed limit exceeded`로
-정지했다. 기록된 각속도는 −16.0405rad/s로 기존 16rad/s 제한을 넘었다.
-재시도하거나 제한을 높이지 않았고, 호스트 FAULT를 유지했다.
+The first gain-48 test stopped at approximately 28.75 seconds with `swing-up angular-speed limit exceeded`. The recorded angular velocity was −16.0405 rad/s, above the existing 16 rad/s limit. The run was not retried, the limit was not raised, and the host remained in FAULT.
 
-원본 862프레임을 30fps 간격으로 재처리했을 때 검출 누락은 0회였고 최대 절대
-각속도는 15.1363rad/s였다. 마지막 두 수신 간격은 추정기 식을 역산하면
-40.8148ms, 27.3487ms였다. 마지막 각도는 영상 재처리와 일치했다.
-이는 수신 시각의 흔들림이 각속도에 영향을 줬을 가능성을 보여준다.
-**일정 간격 영상 재처리는 실제 촬영 간격의 증거가 아니므로 기존 제한 초과를
-오탐으로 확정하지 않는다.** 마지막 영상에서는 색점이 연속 검출되고 진자가 하강했다.
+When all 862 original frames were reprocessed at fixed 30 FPS intervals, there were zero detection losses and maximum absolute angular velocity was 15.1363 rad/s. Inverting the estimator equations gave 40.8148 ms and 27.3487 ms for the final two receive intervals. The final angle matched the video reprocessing. This indicates that receive-timestamp jitter may have affected angular velocity. **Fixed-interval video reprocessing is not evidence of the actual capture interval, so it does not establish that the original limit event was a false positive.** Color markers remained continuously detected and the pendulum was descending in the final video.
 
-정지 상태에서 카메라를 단독으로 열어 확인한 결과 OpenCV 4.14.0 / V4L2가
-제공하는 `CAP_PROP_POS_MSEC`는 Pi의 monotonic 시계와 맞았고 수신 완료보다
-약 5.49~10.35ms 앞섰다. 촬영 간격 자체에도 약 32/36ms 변화가 있으므로
-고정 30fps 간격을 강제로 적용하지 않았다.
+With the motor stationary, the camera was opened independently. `CAP_PROP_POS_MSEC` from OpenCV 4.14.0 / V4L2 agreed with the Raspberry Pi monotonic clock and preceded receive completion by approximately 5.49–10.35 ms. The capture interval itself varied by approximately 32/36 ms, so a fixed 30 FPS interval was not imposed.
 
-`CameraCapture.read()`는 V4L2에서 드라이버의 촬영 시각을 쓰도록 수정했다.
-다른 백엔드는 기존 monotonic 수신 시각을 유지한다. 유효하지 않거나 앞으로
-진행하지 않는 드라이버 시각은 프레임 오류로 처리한다. 누락 프레임의 긴 시간
-간격과 오래된 프레임의 실제 지연을 유지해 기존 추적·지연 보호를 적용한다.
+`CameraCapture.read()` was changed to use the driver's capture timestamp on V4L2. Other backends retain the previous monotonic receive timestamp. Invalid or non-increasing driver timestamps are treated as frame errors. Long intervals from dropped frames and the true age of stale frames remain visible so the existing tracking and delay protections still apply.
 
-V4L2가 반환하는 값의 의미는 설치 버전과 일치하는
-[OpenCV 구현](https://github.com/opencv/opencv/blob/4.14.0/modules/videoio/src/cap_v4l.cpp#L1739)에서
-확인했다. 드라이버마다 시계와 촬영 기준점이 다를 수 있다는 점은
-[Linux V4L2 문서](https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/buffer.html)에
-따라 실제 장치에서 별도 검증했다.
+The meaning of the value returned by V4L2 was checked against the [OpenCV implementation](https://github.com/opencv/opencv/blob/4.14.0/modules/videoio/src/cap_v4l.cpp#L1739) matching the installed version. Because timestamp clocks and exposure reference points can differ by driver, the behavior was separately validated on the physical device in accordance with the [Linux V4L2 documentation](https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/buffer.html).
 
-전체 테스트 260개가 통과했다. 수정 후 정지 상태에서 726프레임을 분석했고
-촬영 간격 31.982~36.018ms, 수신 지연 5.564~10.304ms였다. 실시간 상태 60회
-확인 모두 추적 정상·유효 상태·FAULT 유지·실제/목표 속도 0이었다.
-이 결과는 모터 구동 중의 수정 효과를 입증하지 않는다.
+All 260 tests passed. After the change, 726 stationary frames were analyzed: capture intervals were 31.982–36.018 ms and receive latency was 5.564–10.304 ms. All 60 live-state checks reported healthy tracking, valid state, the FAULT still latched, and zero actual and target velocity. This does not demonstrate the effect of the change while the motor is moving.
 
-## 진단 직후의 정지 상태와 검증 계획 (실구동 전)
+## Stationary State and Validation Plan Immediately After Diagnosis
 
-진단 직후 디스크 설정과 런타임 게인은 32이며 PID와 모든 물리 제한은 그대로였다.
-당시 카트 위치 387.225mm, 실제/목표 속도 0. 호밍·워치독 정상.
-수정 검증 중 대시보드를 재시작할 때는 하드웨어 연결 전에 같은 FAULT를
-먼저 걸었으며, 일반 재시작으로 잠금 상태를 해제하지 않았다.
+Immediately after the diagnosis, both the on-disk and runtime energy gain were 32, while all PID gains and physical limits were unchanged. The cart was at 387.225 mm, actual and target velocity were zero, and homing and the watchdog were healthy. When the dashboard was restarted during validation, the same FAULT was applied before connecting hardware; an ordinary restart did not clear the lock.
 
-다음 비교는 촬영 시각 수정 자체를 별도 조건으로 기록한다. 새로운 manifest는
-`experiments/maintenance/capture-clock-validation-20261031.manifest.json`이다.
-기준 게인 32를 먼저 한 번 점검하고, 이상 없이 정지했을 때 결과를 검토한 후에만
-40을 비교하는 계획이었다. 48 재시도는 계획하지 않았다. 관찰·준비 상태 답변 전에는
-FAULT 해제·위치 복귀·제어 시작을 하지 않는다.
+The next comparison was planned to record the capture-timestamp correction as a distinct condition. The new manifest is `experiments/maintenance/capture-clock-validation-20261031.manifest.json`. The plan was to check baseline gain 32 once, review the result after a normal stop, and compare gain 40 only if that review passed. No gain-48 retry was planned. Before a response confirmed observation and readiness, no FAULT clear, position return, or control start would occur.
 
-준비 도구의 `--manifest`는 해당 조건의 파일 해시를 검증한다. 기존 manifest는
-수정하지 않았으며, 기본값으로 기존 조건을 요청하면 카메라 소스 변경을 거부한다.
-예상 밖 fault를 자동으로 해제하지 않는 기존 동작도 유지했다.
+The preparation utility's `--manifest` verifies file hashes for the requested condition. Existing manifests were not modified; requesting an old condition by default rejects the changed camera source. The existing behavior of not automatically clearing unexpected faults was also retained.
 
-원본 비교 자료는 `experiments/maintenance/{baseline-repeats,swing-gain40,swing-gain48}-20261031`
-의 manifest/analysis, 각 ID의 CSV/monitor/summary에 있다. 카메라 진단·재처리·
-FAULT 보존 상태는 같은 폴더의 `camera-clock-*`, `angular-fault-*`에 보관했다.
+Original comparison materials are in the manifest/analysis files under `experiments/maintenance/{baseline-repeats,swing-gain40,swing-gain48}-20261031` and in the CSV, monitor, and summary files for each experiment ID. Camera diagnosis, reprocessing, and FAULT preservation are recorded in the `camera-clock-*` and `angular-fault-*` files in the same directory.
 
-## 촬영 시각 수정 후 실제 비교 완료 — 18:42~18:45 KST
+## Physical Comparison After the Timestamp Correction — 18:42–18:45 KST
 
-사용자가 `주변 비움 · 진자 아래 · 24V ON · 관찰 중`을 확인한 뒤 기존
-각속도 fault의 검토 기록을 저장하고 명시적으로 해제했다. 게인 48은 재시도하지
-않았다. 같은 제한과 PID를 유지하고, 각 시험 전에 20mm/s 이하로 같은 위치에
-복귀했다. 기존 fault가 수신 시각 오차였다고 확정한 것은 아니다.
+After the user confirmed `area clear · pendulum down · 24 V ON · observing`, the review record for the existing angular-velocity fault was saved and the fault was explicitly cleared. Gain 48 was not retried. The same limits and PID gains were retained, and before every run the cart returned to the same position at no more than 20 mm/s. This did not establish that the earlier fault was caused by receive-timestamp error.
 
-| 게인 | 실험 ID | 실제 시작 위치 | 최대 상승 | 포착 | 최대 기록 각속도 |
+| Gain | Experiment ID | Actual initial position | Maximum rise | Capture | Maximum recorded angular velocity |
 | --- | --- | ---: | ---: | --- | ---: |
-| 32 | 20261031T094243Z-fbd28fe9 | 244.313mm | 165.10° | 없음 | 15.192rad/s |
-| 40 | 20261031T094511Z-45a3a9a3 | 244.313mm | 165.65° | 없음 | 15.424rad/s |
+| 32 | 20261031T094243Z-fbd28fe9 | 244.313 mm | 165.10° | No | 15.192 rad/s |
+| 40 | 20261031T094511Z-45a3a9a3 | 244.313 mm | 165.65° | No | 15.424 rad/s |
 
-두 시험 모두 30초 제한으로 정지했으며, 새로운 각속도 보호 정지·추적 누락은
-없었다. 색점 검출률은 각각 100%였고 영상은 각각 901프레임·누락 0으로 저장됐다.
-두 시험 모두 실제 균형 모드에 진입하지 않았으므로 PID 품질을 새로 평가할
-자료는 없고, 5초 균형 목표도 달성하지 못했다. 각 1회 비교의 결과로 효과를
-일반화하지 않는다.
+Both tests stopped at the 30-second limit, with no new angular-velocity protection stop or tracking loss. Marker detection was 100% in both tests, and each video contained 901 frames with zero drops. Neither run entered actual balance mode, so there are no new data with which to evaluate PID quality, and the five-second balance target was not achieved. No effect is generalized from one run per condition.
 
-기록된 상태에서 에너지 펌핑 항만 복원하면, 가속도 상한의 95% 이상인 구간은
-게인 32에서 약 34.2%, 40에서 약 38.1%였다. 같은 상태 배열에 게인 32와 40을
-대입했을 때 평균 절대 펌핑 명령 증가는 약 6.9~7.2%였다. 게인이 25% 증가해도
-`tanh` 포화 때문에 출력이 비례해 증가하지 않는다. 이는 **계산된 명령**에 대한
-분석이며 실제 모터 힘이나 다른 궤적의 개선 효과를 측정한 것은 아니다.
+Reconstructing only the energy-pumping term from the recorded state showed output at or above 95% of the acceleration ceiling for approximately 34.2% of the gain-32 run and 38.1% of the gain-40 run. Applying gains 32 and 40 to the same state arrays increased the mean absolute pumping command by approximately 6.9–7.2%. A 25% gain increase did not produce a proportional output increase because of `tanh` saturation. This is an analysis of the **calculated command**, not a measurement of actual motor force or improvement on another trajectory.
 
-속도 상한을 넘는 요청은 각각 약 4.6%, 4.7%였고, 그 뒤 레일 제동에 의한 추가
-명령 제한은 각각 0%, 0.1%였다. 이번 두 시험에서는 추가 제동 개입이 드물었다.
-단순 게인 증가가 포착을 개선한다는 근거를 확보하지 못했으며, 스윙업의 에너지
-목표·투입 시점·마찰 손실 등의 원인은 추가 식별이 필요하다. 이번에는 그 설정을
-함께 변경하지 않았다.
+Requests above the velocity ceiling occurred approximately 4.6% and 4.7% of the time, respectively. Additional command limiting by rail braking then occurred approximately 0% and 0.1% of the time. Additional braking intervention was rare in these two tests. The results provide no evidence that simply increasing gain improves capture; energy target, injection timing, friction loss, and other causes require further identification. Those settings were not changed in this comparison.
 
-비교 종료 후 예상된 30초 시간 제한 상태만 해제하고 런타임 게인을 32로
-복귀했다. 대시보드를 정지 상태로 재시작해 과거 시간 제한 오류 표시도 정리했다.
-**최종 상태는 IDLE, 카트 201.825mm, 실제/목표 속도 0, 추적 정상, 오류 없음이다.**
-PID 여섯 이득과 디스크 설정 해시는 기준과 같다. 예약·반복 구동 작업은 없다.
+After the comparison, only the expected 30-second timeout was cleared and the runtime gain was restored to 32. The dashboard was restarted while stationary to clear the old timeout display. **The final state was IDLE, cart position 201.825 mm, zero actual and target velocity, healthy tracking, and no error.** The six PID gains and on-disk configuration hash matched the baseline. No scheduled or repeated run remained.
 
-추가 기록은 `capture-clock-validation-20261031.{manifest,analysis}.json`,
-`capture-clock-fault-review-20261031.json`, `capture-clock-final-state-20261031.json`,
-`capture-clock-pump-analysis-20261031.json`에 보관했다. 계산 재현 스크립트는
-`experiments/maintenance/analyze_capture_clock_pump_20261031.py`이며 하드웨어를 열지 않는다.
+Additional records are stored in `capture-clock-validation-20261031.{manifest,analysis}.json`, `capture-clock-fault-review-20261031.json`, `capture-clock-final-state-20261031.json`, and `capture-clock-pump-analysis-20261031.json`. The reproducibility script is `experiments/maintenance/analyze_capture_clock_pump_20261031.py` and does not open the hardware.
 
-## 추가 요청: catch 각도 범위 확장
+## Additional Request: Wider Catch-Angle Range
 
-사용자의 `catch범위를 넓혀` 요청에 따라 로컬과 Pi의 `config.local.yaml`에서
-`controller.swing_up.capture_angle_rad`만 **0.14 → 0.22rad (±8.0° → ±12.6°)**로
-변경하고 정지 상태로 대시보드를 재시작해 적용을 확인했다. 이는 기존 PID 진입
-상한 0.22rad까지의 확장이다. 각속도 조건 1.5rad/s, 구동 여유 20%, PID 여섯 이득,
-에너지 게인 32와 모든 속도·가속도·이동·각도 이탈 제한은 유지했다.
+In response to the user's request to widen the catch range, only `controller.swing_up.capture_angle_rad` was changed in the local and Raspberry Pi `config.local.yaml` from **0.14 to 0.22 rad (±8.0° to ±12.6°)**. The dashboard was restarted while stationary and the applied value was confirmed. This extends capture to the existing PID-entry ceiling of 0.22 rad. The 1.5 rad/s angular-velocity condition, 20% control headroom, all six PID gains, energy gain 32, and every velocity, acceleration, travel, and release-angle limit remained unchanged.
 
-새 각도 범위에서 수직 쪽으로 움직이며 구동 여유가 있는 상태는 포착하고,
-범위 밖·각속도 초과·구동 여유 부족 상태는 거부하는 양방향 회귀 검증을 추가했다.
-관련 제어 테스트 **130개 통과**. 적용 후 런타임 `capture_angle_rad=0.22`,
-상태 IDLE, 실제/목표 속도 0, 색점 검증 정상, 오류 없음, 활성 실험 없음이다.
-변경 전후 설정과 런타임 검증 기록은 `experiments/maintenance/catch022-applied-20261031.json`이다.
+Bidirectional regression tests were added to confirm capture for a state moving toward upright with adequate control headroom, and rejection for states outside the range, above the angular-velocity limit, or without sufficient headroom. All **130 related control tests passed**. After application, runtime `capture_angle_rad=0.22`; the system was IDLE with zero actual and target velocity, valid color-marker tracking, no error, and no active experiment. The before/after configuration and runtime verification are in `experiments/maintenance/catch022-applied-20261031.json`.
 
-이번 요청에서는 설정 적용과 정지 상태 검증을 완료했다. 새 범위로 실제 포착에
-성공했다는 뜻은 아니다. 직전 두 시험은 수직에서 최소 약 14.9°/14.3°까지 접근했으므로,
-같은 궤적이라면 확대된 12.6° 범위에도 추가로 접근해야 한다.
-앞의 게인 비교 manifest와 기준 설정 해시는 당시 조건의 기록으로 보존했다.
+This request completed configuration application and stationary validation only; it does not mean that physical capture succeeded under the new range. The preceding two runs approached no closer than approximately 14.9°/14.3° from upright, so an identical trajectory would still need to move farther to enter the expanded 12.6° range. The earlier gain-comparison manifests and baseline configuration hashes were preserved as records of their original conditions.
 
-## 후속 성공 기록
+## Subsequent Recorded Result
 
-추가 스윙업 비교 후 게인 44·목표 에너지 여유 0.045를 사용하고,
-에너지 시간 보정은 0으로 유지했다. 균형 단계의 각속도 시차와 영상 지연 보정을
-별도로 적용한 `20261031T113048Z-2c07fdc8` 시험에서 **연속 ±5° 5.08초**를
-확인하고 실제/목표 속도 0으로 정지했다. PID 여섯 이득과 물리 구동 제한은 유지했다.
-이 5초 시험의 설정과 검증 원본은 [성공 기록](swing_up_success_20261031.md)에 정리했다.
-앞 절의 설정·실패 결과·정지 위치는 각 당시 시점의 기록이다.
+After additional swing-up comparisons, gain 44 and target energy margin 0.045 were used while energy timing compensation remained zero. In test `20261031T113048Z-2c07fdc8`, which applied angular-rate alignment and video-delay compensation separately in the balance stage, a **continuous 5.08-second interval within ±5°** was confirmed before stopping with zero actual and target velocity. All six PID gains and physical operating limits were retained. The settings and original validation materials are documented in the [recorded result](swing_up_success_20261031.md). Settings, failures, and stopping positions in the preceding sections remain records of their respective times.
 
-이후 재호밍 후 게인 46·여유 0.045에서 **연속 ±5° 15.01초**를 기록했다.
-다만 종료 후 무제어 상태에서도 서 있고 기울인 자세에서도 멈추는 기계 저항이
-확인돼 제어 효과는 미확인으로 정정했다. 최신 해석과 저장 설정은
-[15초 기록과 기계 저항 점검](hold15_success_20261031.md)을 참고한다.
+After rehoming, a **continuous 15.01-second interval within ±5°** was recorded with gain 46 and margin 0.045. However, mechanical resistance was then found: the pendulum remained standing without control and at a manually tilted pose. The control effect was therefore reclassified as unconfirmed. See the [15-second record and mechanical-resistance review](hold15_success_20261031.md) for the latest interpretation and saved configuration.

@@ -1,99 +1,65 @@
-# 위치 쏠림 비교와 각도 기준 보정 — 2026-11-01
+**English** | [한국어](ko/position_drift_review_20261101.md)
 
-**위치에 따른 각도 기준 보정을 적용한 두 번째 시험에서 연속 ±5° 15.03초를
-기록했다. 해당 구간 카트는 RP2040 기준 215.1~324.075mm에서 움직였고,
-238.313mm에서 정상 정지했다.** 중앙 기준은 256.369mm다.
-실험 ID는 `20261101T053856Z-adde3c2c`, 시작 시각은 14:38:56 KST다.
+# Position-Drift Comparison and Angle-Reference Correction — 2026-11-01
 
-같은 보정 조건의 첫 시험은 길게 유지하지 못했다. 반복 성공률이나 무제어 상태와
-비교한 PID 단독 효과를 검증한 결과는 아니다. 이번 결과는 측정된 유지 시간과
-카트가 왼쪽 보호 제동 구간까지 밀리지 않았다는 관찰로 해석한다.
+**The second test with position-dependent angle-reference correction recorded 15.03 continuous seconds within ±5°. During that interval, the cart moved from 215.1 to 324.075 mm in RP2040 coordinates and stopped normally at 238.313 mm.** The center reference is 256.369 mm. The experiment ID is `20261101T053856Z-adde3c2c`, started at 14:38:56 KST.
 
-## 위치 P 비교
+The first test under the same corrected condition did not maintain balance for long. This result does not establish repeatability or isolate the PID-only effect against an uncontrolled baseline. It is interpreted as a measured hold interval in which the cart did not drift into the left protective-braking region.
 
-사용자가 수직을 유지하면서 카트가 한쪽으로 계속 이동한다고 보고했다.
-기존 위치 P는 중앙에서 100mm 벗어나도 목표 기울기를 약 0.044°만 바꾼다.
-먼저 각도 PID·스윙업 게인·보호 제한을 유지하고 위치 P만 두 배로 비교했다.
+## Position-P Comparison
 
-| 조건 | 확인한 연속 ±5° 유지 | 결과 |
+The user reported that the pendulum remained balanced while the cart kept moving toward one side. With the previous position P gain, a 100 mm displacement from center changed the target tilt by only approximately 0.044°. The first comparison kept the angle PID, swing-up gain, and protection limits unchanged and doubled only position P.
+
+| Condition | Confirmed continuous hold within ±5° | Result |
 | --- | --- | --- |
-| 기존 기준, 축 수정 후 10월31일 시험 | 원시 CSV 3.45초 | 왼쪽 보호 제동 구간 도달 |
-| 위치 P 0.0000077 → 0.0000154 | 약 2.71초(독립 모드 기록) | 쏠림 미해결, 원래 이득으로 복귀 |
-| 원래 이득 + 새 각도 기준, 첫 시험 | 0초 | 2회 포착했지만 각각 약 0.37초 |
-| 동일 조건 반복 | **원시 CSV 15.03초** | 네 번째 포착에서 기준 충족 |
+| Previous reference, October 31 test after shaft correction | 3.45 s in raw CSV | Reached the left protective-braking region |
+| Position P 0.0000077 → 0.0000154 | Approximately 2.71 s in the independent mode log | Drift unresolved; restored original gain |
+| Original gain + new angle reference, first test | 0 s | Two captures, each approximately 0.37 s |
+| Repeat under the same condition | **15.03 s in raw CSV** | Met the criterion on the fourth capture |
 
-각 조건 표본이 적고 이전 기준은 재부팅 전 다른 시험이다. 이 표를 통계적인
-게인 우열 비교로 사용하지 않는다. 현재 위치 P는 **원래 값 0.0000077**이다.
-각도 PID `26000 / 0 / 3300`, 위치 I/D `0 / 0.0001875`, 에너지 게인 46과
-에너지 여유 0.045도 유지했다.
+The number of samples per condition is small, and the earlier baseline came from a different pre-reboot test. This table must not be used as a statistical comparison of gain quality. The active position P gain is the **original value, 0.0000077**. Angle PID `26000 / 0 / 3300`, position I/D `0 / 0.0001875`, energy gain 46, and energy margin 0.045 were retained.
 
-## 발견한 각도 기준의 위치 의존성
+## Position Dependence Found in the Angle Reference
 
-두 번의 저속 호밍 동안 진자를 아래로 둔 채 영상 상태를 기록했다.
-일정 속도 구간에서 하향 기준각이 위치에 따라 약 **−0.4626°/100mm** 기울기로
-변하는 현상이 반복됐다. 좌우 이동 방향에 따른 차이도 있어, 양방향 자료를
-짝지어 평균한 뒤 위치별 기준을 추정했다. 정지 뒤 남는 기울기는 적합에서 제외했다.
+During two low-speed homing runs, video state was recorded with the pendulum hanging down. In constant-velocity segments, the downward reference angle repeatedly changed with position at approximately **−0.4626° per 100 mm**. Because the result also differed by travel direction, paired data from both directions were averaged before estimating the position-dependent reference. Residual tilt after stopping was excluded from the fit.
 
-첫 기록의 적합을 정상 거리의 두 번째 호밍 기록과 비교한 짝 평균 잔차 RMS는
-0.0267°였다. **이는 두 기록의 일치도이며, 외부 수직 기준에 대한 절대 정확도가 아니다.**
-첫 호밍의 거리 값은 채택하지 않았고, 각도 적합에는 영상으로 계산한 위치를 사용했다.
+The paired-average residual RMS between the first-record fit and the second, normal-length homing record was 0.0267°. **This measures agreement between the two records, not absolute accuracy against an external vertical reference.** The first homing distance was not adopted, and image-derived position was used for the angle fit.
 
-기존 고정 각도 기준에 선택적인 위치 의존 항을 추가했다.
+An optional position-dependent term was added to the previous fixed angle reference.
 
 ```text
-각도 기준(x) = 기준 위치의 각도 + 기울기 × (x − 256.369mm)
+angle reference(x) = angle at reference position + slope × (x − 256.369 mm)
 ```
 
-기준 위치의 각도는 기존 값에서 +0.1334° 조정했고, 기존 고정 기준 대비
-레일 전체의 최대 변화는 약 1.319°다. 코드가 허용하는 위치 의존 보정은 최대 3°이며
-비유한 값이나 범위를 넘는 보정은 상태를 무효로 처리한다.
-기본 기울기 0은 기존 각도 계산과 같은 동작을 유지한다.
+The angle at the reference position was adjusted by +0.1334° from the previous value. Relative to the old fixed reference, the maximum change across the rail is approximately 1.319°. The code permits no more than 3° of position-dependent correction and invalidates state when a non-finite value or an out-of-range correction is supplied. The default slope of zero preserves the previous angle calculation.
 
-**레일 위치 변환·레일 양 끝 영상 좌표·색점 HSV·밝기 기준은 바꾸지 않았다.**
-새 활성 프로필은 `angle-reference-20261101`이다. 보정은 각속도 계산 전 각도에
-적용해 카트 이동이 가짜 각속도를 만드는 효과도 함께 줄인다.
+**Rail-position mapping, image coordinates for both rail ends, color-marker HSV values, and the brightness reference were not changed.** The new active profile is `angle-reference-20261101`. The correction is applied to angle before angular velocity is calculated, reducing the false angular velocity otherwise produced by cart motion.
 
-## 최종 시험의 독립 검증
+## Independent Validation of the Final Test
 
-- 원시 CSV에서 약 30.330~45.360초, **15.029995731초**, 1,504개 표본.
-- 독립 약 20Hz 모드 기록에서도 15.0441초 연속 조건 충족.
-- 해당 구간 각도 RMS **0.444°**, 최대 절대 각도 **3.678°**.
-- 카트 범위: RP2040 215.1~324.075mm, 카메라 215.28~330.83mm.
-- 전체 시험 최대 실제 속도 240mm/s, 기록된 최대 각속도 15.194rad/s.
-- 검출률 100%, 추적 누락 0회. 영상 1,361프레임, 녹화 누락 0프레임.
-- 종료 후 IDLE, 제어 비활성, 실제/목표 모터 속도 0, Pi 전원 진단 `0x0`.
-- RP2040 fault·ESTOP·리미트 입력 없음, 호밍·워치독 정상.
+- In the raw CSV, approximately 30.330–45.360 seconds: **15.029995731 seconds**, 1,504 samples.
+- The independent approximately 20 Hz mode log also met the continuous condition for 15.0441 seconds.
+- Angle RMS during the interval was **0.444°** and maximum absolute angle was **3.678°**.
+- Cart range: RP2040 215.1–324.075 mm; camera 215.28–330.83 mm.
+- Maximum actual velocity over the full test was 240 mm/s; maximum recorded angular velocity was 15.194 rad/s.
+- Detection rate was 100%, with zero tracking losses. The video contains 1,361 frames with zero recording drops.
+- After completion: IDLE, control inactive, zero actual and target motor velocity, and Raspberry Pi power diagnostics `0x0`.
+- No RP2040 fault, ESTOP, or limit input; homing and the watchdog were healthy.
 
-각도 판정은 실제 balance 모드·유효한 원시 추적·120ms 이내 영상 상태·표본 연속성을
-함께 확인했다. 기존 5초용 성공 플래그를 15초 증거로 쓰지 않았다.
-종료 뒤 별도 10초 관찰에서도 모터는 0이었고 진자는 약 0.27~0.39°에 머물렀다.
-따라서 이 시험을 수동 지지·정지 마찰의 영향을 배제한 비교로 해석하지 않는다.
+The angle decision jointly checked actual balance mode, valid raw tracking, video state no older than 120 ms, and sample continuity. The existing five-second success flag was not used as evidence for 15 seconds. During a separate ten-second observation after the test, motor velocity remained zero and the pendulum stayed at approximately 0.27–0.39°. The result therefore does not exclude the influence of manual support or static friction.
 
-## 코드 검증과 보존
+## Code Validation and Preservation
 
-Pi 실행 환경에서 **322개 테스트 통과**. 기존 Starlette 테스트 클라이언트 경고 1개.
-새 검증은 좌우 영상 방향·상향/하향·각도 감김에서도 이동하는 수직 진자에 가짜 각도와
-각속도를 만들지 않는지, 레일 위치 변환을 유지하는지, 기존 프로필 호환과 잘못된 보정
-거부를 확인한다. 생산 제어의 속도·가속도·각속도·추적·리미트·워치독 제한은 유지했다.
+**All 322 tests passed** in the Raspberry Pi runtime environment, with one warning from the existing Starlette test client. New validation checks that a vertically oriented pendulum moving across the rail does not acquire a false angle or angular velocity under either image direction, upright/downward orientation, or angle wrapping; that rail-position mapping is unchanged; that existing profiles remain compatible; and that invalid correction is rejected. Production velocity, acceleration, angular-velocity, tracking, limit, and watchdog protections were retained.
 
-- 실제 로그·모드·요약·원본 AVI/MP4: `20261101T053856Z-adde3c2c` 식별자의
-  `experiments/logs`, `experiments/summaries`, `experiments/videos` 자료.
-- 재검증: `experiments/verify_balance_recording.py`와
-  `experiments/maintenance/20261101T053856Z-adde3c2c.verified.json`.
-- 비교·각도 적합·소스 백업·승인 이득 복귀 자료는 maintenance 폴더의
-  `position-P2-*`, `position-angle-fit-*`, `angle-correction-*` 기록.
-- 71개 자료의 PC 복사본을 SHA-256으로 대조했다. 원본 묶음은
-  `position-tuning-completed-20261101.tar.gz`다.
-- 이전 설정은 `config.before-position-angle.20261101.yaml`, 이전 코드는
-  `*.before-position-angle-20261101.py`에 보관했다.
+- Actual log, mode log, summary, and original AVI/MP4: materials identified by `20261101T053856Z-adde3c2c` under `experiments/logs`, `experiments/summaries`, and `experiments/videos`.
+- Revalidation: `experiments/verify_balance_recording.py` and `experiments/maintenance/20261101T053856Z-adde3c2c.verified.json`.
+- Comparison data, angle fits, source backups, and restoration of approved gains: the `position-P2-*`, `position-angle-fit-*`, and `angle-correction-*` records in the maintenance directory.
+- SHA-256 matched all 71 files in the PC copy. The original archive is `position-tuning-completed-20261101.tar.gz`.
+- The previous configuration is `config.before-position-angle.20261101.yaml`; previous code is preserved in `*.before-position-angle-20261101.py`.
 
-현재 설정 SHA-256:
+Current configuration SHA-256:
 `3a84e16634d67251d5325f0b6eeecca14366fe86e7255f033af0350de9473f10`.
-복원할 때는 프로필 선택 설정과 코드 버전을 함께 맞춘다.
+When restoring, match both the profile-selection configuration and code version.
 
-사용자가 직접 Pi를 재부팅했다고 확인한 뒤 서버를 복구했다.
-첫 호밍 402.263mm는 기존 약 513mm와 달라 채택하지 않고 ESTOP으로 중지했다.
-사용자가 첫 호밍 이상 현상과 재호밍 필요성을 설명한 뒤, 두 번째 513.113mm와
-영상 범위를 확인하고 시험했다. **첫 호밍 문제의 펌웨어 원인은 이번에 수정하지 않았다.**
-추가 구동이나 예약된 ARM/START 작업은 없다. 대시보드 연결은
-PC의 `http://localhost:8000/`로 복구했다.
+After the user confirmed a manual Raspberry Pi reboot, the server was restored. The first homing result, 402.263 mm, differed from the previous approximately 513 mm and was rejected; the system was stopped with ESTOP. After the user explained the first-homing anomaly and the need to rehome, the second result of 513.113 mm and the image range were verified before testing. **The firmware cause of the first-homing problem was not corrected in this work.** No additional run or scheduled ARM/START task remains. Dashboard connectivity was restored at `http://localhost:8000/` on the PC.

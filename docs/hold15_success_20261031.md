@@ -1,109 +1,67 @@
-# 자동 스윙업 후 15초 수직 기록 — 제어 효과 미확인
+**English** | [한국어](ko/hold15_success_20261031.md)
 
-후속 설명에서 사용자는 수직에 잘 맞추면 손을 떼도 서 있다는 뜻이라고 다시 설명했고,
-축이 걸린 것 같지는 않지만 틀어져 있어 수정했다고 보고했다. 이전 수동 유지
-관찰만으로 축 걸림을 확정하지 않는다. 자유 회전 확인 후 동일 설정으로 시행한
-[축 수정 후 재시험](shaft_corrected_retest_20261031.md)의 최장 연속 ±5°는 3.45초였다.
+# 15-Second Upright Record After Automatic Swing-Up — Control Effect Unconfirmed
 
-**21:26:27 KST 시작 시험에서 연속 ±5° 15.01초를 기록했지만,
-이후 무제어 상태에서도 서 있고 손으로 기울인 위치에서도 멈춘다는 사실이 확인됐다.
-따라서 이 기록을 PID 균형 제어 성공으로 해석한 결론은 철회한다.**
-실험 ID는 `20261031T122627Z-cea4f757`이다. 완료 후 IDLE과 실제/목표 모터 속도
-0을 확인했다. 각도·시간 기록은 유효하지만 축 마찰·걸림 등 기계 저항과
-제어의 기여를 분리하지 못했으므로 제어 성능과 반복 성공률은 미확인이다.
+In a later clarification, the user explained that when the pendulum was aligned well at upright, it remained standing after release. The user did not believe the shaft was jammed, but reported that it had been misaligned and was subsequently corrected. The earlier manual-hold observation alone does not establish shaft binding. In the [retest after shaft correction](shaft_corrected_retest_20261031.md), performed with the same settings after free rotation was confirmed, the longest continuous hold within ±5° was 3.45 seconds.
 
-## 종료 후 발견한 기계 저항
+**The test that began at 21:26:27 KST recorded 15.01 continuous seconds within ±5°, but the pendulum was later found to remain standing without control and to stop at a manually tilted position. The earlier conclusion that this record demonstrated successful PID balance control is therefore withdrawn.** The experiment ID is `20261031T122627Z-cea4f757`. IDLE state and zero actual/target motor velocity were confirmed after completion. The angle and timing records are valid, but the contributions of mechanical resistance such as shaft friction or binding and of active control were not separated; control performance and repeatability therefore remain unconfirmed.
 
-사용자가 시험 종료 후에도 진자가 위에 서 있다고 지적했다. API를 읽어
-IDLE, `control.active=false`, 실제/목표 모터 속도 0, 수직 부근 각도를 확인했다.
-그 뒤 사용자는 **24V 모터 전원을 끄고 조금 기울여도 그 위치에서 멈춘다**고 답했다.
-이는 모터 제어 없이도 자세를 지지하는 기계 저항이 있음을 보여준다.
-정확한 부품이나 원인은 아직 식별하지 않았다.
+## Mechanical Resistance Found After the Test
 
-축의 압착·베어링 정렬·주변 접촉을 점검하고 중력으로 자유롭게 회전하는지
-확인한 뒤 제어 시험을 다시 평가해야 한다. 이 점검 중 ARM/START나
-모터 이동 명령은 보내지 않았다. 근거는
-`experiments/maintenance/hold15-passive-binding-review-20261031.json`에 저장했다.
+After the test, the user pointed out that the pendulum was still standing upright. The API showed IDLE, `control.active=false`, zero actual and target motor velocity, and an angle near upright. The user then reported that **with 24 V motor power off, the pendulum remained at a slightly tilted position**. This shows that mechanical resistance could support the pose without motor control. The exact component and cause have not been identified.
 
-## 확인한 결과
+Shaft clamping, bearing alignment, and nearby contact must be inspected, and gravity-driven free rotation must be confirmed before the control test is evaluated again. No ARM/START or motor-motion command was sent during this inspection. The evidence is stored in `experiments/maintenance/hold15-passive-binding-review-20261031.json`.
 
-- 원시 영상 각도 CSV: 약 16.16~31.17초에 **15.009993926초** 연속 ±5°.
-- 같은 구간 1,502개 표본의 각도 RMS **0.650°**, 최대 절대 각도 **4.376°**.
-- 별도 약 20Hz 모드 기록의 연속 유지 **15.0055초**.
-- 첫 포착은 약 6.95초. 처음 두 번의 포착은 풀렸고, 약 15.96초의 세 번째
-  포착에서 균형 모드 약 15.22초를 유지하며 최종 기준을 충족했다.
-- 전체 시험 약 31.17초, 실제 RP2040 속도 최대 240mm/s,
-  기록된 최대 각속도 15.787rad/s. 기존 16rad/s 보호를 유지했다.
-- 색점 검출률 100%, 추적 누락 0회. 영상 935프레임, 녹화 누락 0프레임.
-  검토 프레임에서 하향 시작과 수직 유지가 확인됐고 손 접촉은 보이지 않았다.
-- 최종 카트 166.163mm, 실제/목표 속도 0, 호밍·워치독 정상,
-  RP2040 fault·ESTOP·리미트 입력 없음. 시험과 영상 변환 후 전원 진단 `0x0`.
-- 성공 뒤 추가 ARM/START나 반복 시험은 실행하지 않았다.
+## Confirmed Results
 
-판정에는 예측 각도나 기존 5초용 성공 플래그를 사용하지 않았다.
-원시 각도 ±5°, 실제 `balance` 모드, 추적 유효성, 120ms 이내 영상 상태와
-표본 연속성을 함께 확인했다. 재검증 스크립트는 하드웨어나 API를 열지 않는다.
+- The raw video-angle CSV contains **15.009993926 continuous seconds** within ±5°, approximately from 16.16 to 31.17 seconds.
+- Across 1,502 samples in the same interval, angle RMS was **0.650°** and maximum absolute angle was **4.376°**.
+- The separate approximately 20 Hz mode log recorded a continuous hold of **15.0055 seconds**.
+- First capture occurred at approximately 6.95 seconds. The first two captures were released; the third, at approximately 15.96 seconds, remained in balance mode for about 15.22 seconds and met the final criterion.
+- The full test lasted approximately 31.17 seconds. Maximum actual RP2040 velocity was 240 mm/s and maximum recorded angular velocity was 15.787 rad/s. The existing 16 rad/s protection remained enabled.
+- Color-marker detection was 100%, with zero tracking losses. The video contains 935 frames with zero recording drops. Review frames confirmed a downward start and upright hold, with no visible hand contact.
+- Final cart position was 166.163 mm, actual and target velocity were zero, homing and the watchdog were healthy, and there was no RP2040 fault, ESTOP, or limit input. Power diagnostics after the test and video conversion were `0x0`.
+- No additional ARM/START command or repeat test was run after the record.
 
-## 이번에 바꾼 설정
+The decision did not use predicted angle or the existing five-second success flag. It jointly checked raw angle within ±5°, actual `balance` mode, valid tracking, video state no older than 120 ms, and sample continuity. The revalidation script does not open the hardware or API.
 
-직전 동일 시작 위치 시험과 비교해 **스윙업 에너지 게인만 44 → 46**으로 바꿨다.
-각도 PID `26000 / 0 / 3300`, 위치 PID `0.0000077 / 0 / 0.0001875`는 유지했다.
-목표 에너지 여유 0.045, 에너지 시차 보정 0, catch 0.22rad·1.5rad/s,
-포착 구동 여유 20%, 균형 전용 예측 20ms·각속도 정렬 30ms도 유지했다.
+## Configuration Change
 
-속도 240mm/s, 스윙업 가속도 1,500mm/s², 펌웨어·균형 가속도 제한
-2,000mm/s², 중앙 256.369mm와 허용 이동 ±160mm를 유지했다.
-준비 위치 복귀는 기존 20mm/s 이하로 수행했다.
-카메라·색점 프로필과 레일 영상 좌표는 다시 보정하지 않았다.
-사용자도 카메라·레일·진자 물리 조건을 바꾸지 않았다고 확인했다.
+Compared with the immediately preceding test from the same start position, **only the swing-up energy gain changed from 44 to 46**. The angle PID `26000 / 0 / 3300` and position PID `0.0000077 / 0 / 0.0001875` were unchanged. Target energy margin 0.045, zero energy timing compensation, capture at 0.22 rad and 1.5 rad/s, 20% capture headroom, balance-only 20 ms prediction, and 30 ms angular-rate alignment were also unchanged.
 
-게인 46을 Pi와 PC의 `config.local.yaml`에 저장했다. 저장 시 재시작이나
-추가 구동은 하지 않았으며 이미 적용된 런타임 값과 일치한다.
-이 설정은 자유 회전하는 진자에서 검증된 값으로 간주하지 않는다.
+The limits remained 240 mm/s velocity, 1,500 mm/s² swing-up acceleration, 2,000 mm/s² firmware and balance acceleration, center 256.369 mm, and allowed travel ±160 mm. Return to the preparation position was performed at no more than 20 mm/s. Camera and color-marker profiles and rail-image coordinates were not recalibrated. The user also confirmed that the physical camera, rail, and pendulum conditions had not changed.
 
-- 저장 설정 SHA-256: `3a2d7ee57c7092d791e5d86a2421b370eafe592da285e54f32df2ff1d2eafd40`.
-- 변경 전 설정: `config.before-hold15-gain46.20261031.yaml`.
-- 시험 당시 디스크 설정은 이전 게인 44였고, 시험 인자로 게인 46을 적용했다.
-  시험 manifest의 기존 디스크 해시는 이 이력을 보존한다.
+Gain 46 was saved to `config.local.yaml` on the Raspberry Pi and PC. Saving did not restart the system or actuate the hardware, and the value matched the already active runtime setting. This configuration is not considered validated on a freely rotating pendulum.
 
-## 재호밍 이후 비교
+- Saved-configuration SHA-256: `3a2d7ee57c7092d791e5d86a2421b370eafe592da285e54f32df2ff1d2eafd40`.
+- Previous configuration: `config.before-hold15-gain46.20261031.yaml`.
+- The on-disk configuration during the test still contained gain 44; gain 46 was supplied as a test argument. The existing disk hash in the experiment manifest preserves this history.
 
-이전 [5.08초 성공](swing_up_success_20261031.md) 후 전원 경고와 재부팅이 있었다.
-사용자가 전원 연결 점검·진자 하향·주변 비움·24V ON·관찰 준비를 확인한 뒤
-기존 잠금을 검토하고 재호밍했다. 새 호밍 길이는 513.263mm이며 영상 좌표는 유지했다.
+## Comparison After Rehoming
 
-| 에너지 게인 | 에너지 여유 | 시작 RP 위치 | 결과 |
+After the earlier [5.08-second result](swing_up_success_20261031.md), a power warning and reboot occurred. Once the user confirmed that power connections had been checked, the pendulum was down, the area was clear, 24 V power was on, and observation was ready, the existing lock was reviewed and the system was rehomed. The new homed length was 513.263 mm, while the video-coordinate mapping was retained.
+
+| Energy gain | Energy margin | Initial RP position | Result |
 | --- | --- | --- | --- |
-| 44 | 0.045 | 244.313mm | 최대 상승 179.75°, 포착 없음 |
-| 44 | 0.035 | 244.313mm | 최대 상승 165.22°, 포착 없음 |
-| 44 | 0.040 | 244.313mm | 최대 상승 165.30°, 포착 없음 |
-| 44 | 0.0425 | 244.313mm | 최대 상승 169.13°, 포착 없음 |
-| 44 | 0.045 | 246.263mm | 최대 상승 170.02°, 포착 없음 |
-| 46 | 0.045 | 246.263mm | 연속 ±5° 15.01초 기록, 기계 저항 영향 미분리 |
+| 44 | 0.045 | 244.313 mm | Maximum rise 179.75°, no capture |
+| 44 | 0.035 | 244.313 mm | Maximum rise 165.22°, no capture |
+| 44 | 0.040 | 244.313 mm | Maximum rise 165.30°, no capture |
+| 44 | 0.0425 | 244.313 mm | Maximum rise 169.13°, no capture |
+| 44 | 0.045 | 246.263 mm | Maximum rise 170.02°, no capture |
+| 46 | 0.045 | 246.263 mm | 15.01 seconds within ±5° recorded; mechanical-resistance effect not separated |
 
-마지막 두 시험의 시작 위치는 재호밍 전 성공 영상의 카트 좌표에 맞추기 위해
-기존 중앙 ±20mm 준비 범위 안에서 선택했다. 이는 레일 좌표 보정이 아니다.
-기록된 명령과 영상 위치의 오프라인 비교에서 응답 시차는 이전 성공 22ms,
-재호밍 후 21~22ms로 비슷했다. 이 자료만으로 재부팅이나 특정 기계 변경을
-실패 원인으로 단정하지 않았다. 각 조건 1회 비교로 게인 46의 반복 우위를 주장하지 않는다.
+The initial position for the final two tests was chosen within the existing center ±20 mm preparation range to match the cart coordinate in the successful video before rehoming. This was not rail-coordinate calibration. Offline comparison of recorded commands and video positions gave a response delay of 22 ms for the earlier result and 21–22 ms after rehoming. These data alone do not identify the reboot or any particular mechanical change as the cause of the failures. One test per condition does not establish repeatable superiority of gain 46.
 
-## 검증과 원본
+## Validation and Originals
 
-Pi 실제 실행 환경에서 전체 테스트 **303개 통과**, 기존 Starlette 테스트 클라이언트
-사용 중단 예정 경고 1개. 15초 목표를 명시적으로 검증하는 시험 도구는 기본 5초 동작을
-보존하며, 15초 요청 시 전체 실행을 최대 45.5초, 부모 제한을 55초로 제한한다.
-허용 시간이 지난 ARM/START는 거부한다.
+In the actual Raspberry Pi runtime environment, **all 303 tests passed**, with one deprecation warning from the existing Starlette test client. The test utility that explicitly validates the 15-second target preserves the default five-second behavior; when 15 seconds is requested, it limits the complete run to 45.5 seconds and the parent process to 55 seconds. ARM/START is rejected after the allowed time expires.
 
-- 성공 원본: `experiments/logs/20261031T122627Z-cea4f757.{csv,monitor.json}`.
-- 실험 요약: `experiments/summaries/20261031T122627Z-cea4f757.json`.
-- 원본 영상과 MP4: `experiments/videos/20261031T122627Z-cea4f757.{avi,mp4}`.
-- 성공 조건과 결과: `experiments/maintenance/hold15-gain46-20261031.{manifest,analysis}.json`.
-- 독립 재검증: `experiments/maintenance/verify_hold15_success_20261031.py`와
-  `hold15-independent-verification-20261031.json`.
-- 저장 설정·최종 정지 확인: `hold15-saved-configuration-20261031.json`,
-  `hold15-final-state-20261031.json` (위 maintenance 폴더).
-- 준비·재호밍·6개 시험·설정·원본 영상은 `hold15-completed-20261031.tar.gz`에도
-  보관했다. 로컬 복사본의 72개 파일을 SHA-256으로 대조했다.
+- Original record: `experiments/logs/20261031T122627Z-cea4f757.{csv,monitor.json}`.
+- Experiment summary: `experiments/summaries/20261031T122627Z-cea4f757.json`.
+- Original video and MP4: `experiments/videos/20261031T122627Z-cea4f757.{avi,mp4}`.
+- Conditions and results: `experiments/maintenance/hold15-gain46-20261031.{manifest,analysis}.json`.
+- Independent revalidation: `experiments/maintenance/verify_hold15_success_20261031.py` and `hold15-independent-verification-20261031.json`.
+- Saved configuration and final-stop confirmation: `hold15-saved-configuration-20261031.json` and `hold15-final-state-20261031.json` in the same maintenance directory.
+- Preparation, rehoming, six tests, configuration, and original video are also archived in `hold15-completed-20261031.tar.gz`. SHA-256 checks matched all 72 files in the local copy.
 
-대시보드는 PC의 `http://localhost:8000/`에서 열 수 있다. 다음 실제 구동은
-작업자가 준비된 상태에서 명시적으로 시작해야 하며 예약된 구동은 없다.
+The dashboard is available on the PC at `http://localhost:8000/`. The next physical run must be started explicitly by a prepared operator; no run is scheduled.

@@ -1,44 +1,46 @@
-# 스윙업과 균형 제어
+**English** | [한국어](ko/control_algorithm.md)
 
-제어기는 에너지 기반 스윙업과 직렬형 위치/각도 PID를 하나의 상태기로 연결합니다. 카메라에서 계산한 `θ, ω, x, v`만 사용하며, 최종 출력은 RP2040에 보낼 signed velocity입니다.
+# Swing-Up and Balance Control
 
-## 제어 흐름
+The controller connects energy-based swing-up and cascaded position/angle PID control in one state machine. It uses only `θ, ω, x, v` calculated from the camera, and its final output is the signed velocity sent to the RP2040.
+
+## Control Flow
 
 ~~~mermaid
 flowchart TD
-    A["유효한 θ, ω, x, v"] --> B{"현재 모드"}
-    B -->|swing_up| C["에너지 오차 계산"]
-    C --> D["에너지 가속도 + 중앙복귀 PD"]
-    D --> E{"포착 조건 충족?"}
-    E -->|아니오| H["속도 적분"]
-    E -->|예| F["현재 속도를 유지하고 balance 전환"]
-    F --> G["위치 PID → 목표 각도"]
-    G --> M{"release 각도 초과?"}
-    M -->|아니오| I["각도 PID → 카트 가속도"]
-    M -->|예| C
+    A["Valid θ, ω, x, v"] --> B{"Current mode"}
+    B -->|swing_up| C["Calculate energy error"]
+    C --> D["Energy acceleration + centering PD"]
+    D --> E{"Capture conditions met?"}
+    E -->|No| H["Integrate velocity"]
+    E -->|Yes| F["Preserve current velocity and enter balance"]
+    F --> G["Position PID → target angle"]
+    G --> M{"Release angle exceeded?"}
+    M -->|No| I["Angle PID → cart acceleration"]
+    M -->|Yes| C
     I --> H
     B -->|balance| G
-    H --> J["호스트 속도·가속도·제동거리 제한"]
-    J --> K["RP2040 로컬 안전 제한"]
+    H --> J["Host velocity, acceleration, and stopping-distance limits"]
+    J --> K["RP2040 local safety limits"]
     K --> L["STEP/DIR/ENA"]
 ~~~
 
-## 상태와 출력
+## State and Output
 
-제어 입력:
+Control inputs:
 
 ~~~text
-θ : 수직 위쪽을 0으로 한 진자 각도
-ω : 진자 각속도
-x : 카트 위치
-v : 카트 속도
+θ : pendulum angle, with upright defined as zero
+ω : pendulum angular velocity
+x : cart position
+v : cart velocity
 ~~~
 
-제어 출력은 카트의 목표 속도입니다. 실물 설정에서는 angle PID 출력을 가속도로 해석한 뒤 실제 `dt`로 적분합니다.
+The control output is the cart target velocity. In the physical-system configuration, the angle-PID output is interpreted as acceleration and integrated with the actual `dt`.
 
-## 균형 제어
+## Balance Control
 
-외부 위치 루프가 작은 목표 각도를 만들고, 내부 각도 루프가 그 각도를 따라가도록 카트를 가속합니다.
+The outer position loop produces a small target angle, and the inner angle loop accelerates the cart to track that angle.
 
 ~~~text
 e_x = x_center - x
@@ -50,38 +52,38 @@ a_cmd = PID_angle(e_θ)
 v_target[k] = v_applied[k-1] + output_sign × a_cmd × dt
 ~~~
 
-구현에 포함된 처리:
+The implementation includes:
 
-- derivative-on-measurement
-- estimator의 필터된 `ω`와 `v`를 D항에 사용
-- 18 Hz D항 저역통과 필터
-- 조건부 적분
+- derivative on measurement
+- filtered estimator `ω` and `v` for the derivative terms
+- an 18 Hz low-pass filter on derivative terms
+- conditional integration
 - back-calculation anti-windup
-- 게인 변경 시 bumpless update
-- 최대 속도와 `a_max × dt` slew-rate 제한
+- bumpless updates when gains change
+- maximum-velocity and `a_max × dt` slew-rate limits
 
-Acceleration mode에서는 angle `Kp`가 `g=9806.65 mm/s²/rad`보다 작으면 실행을 거부합니다. 진자 복원 가속도를 만들 수 없는 설정을 실수로 구동하지 않기 위한 검사입니다.
+In acceleration mode, execution is rejected when angle `Kp` is below `g=9806.65 mm/s²/rad`. This check prevents accidental operation with a configuration that cannot generate the restoring acceleration required by the pendulum.
 
-## 에너지 스윙업
+## Energy-Based Swing-Up
 
-수직 위를 `θ=0`, 아래쪽을 `θ=±π`로 정의합니다. 진자 질량으로 나눈 정규화 에너지 오차는 다음과 같습니다.
+Upright is defined as `θ=0`, and the downward position as `θ=±π`. The normalized energy error, divided by pendulum mass, is:
 
 ~~~text
 e = 0.5 × l × ω² / g + cos(θ) - 1 - e_margin
 ~~~
 
-`e=0`은 수직 separatrix입니다. `e_margin`은 마찰로 사라지는 에너지를 보충하기 위한 작은 여유입니다.
+`e=0` is the upright separatrix. `e_margin` is a small allowance for energy lost to friction.
 
-에너지 주입 가속도:
+Energy-injection acceleration:
 
 ~~~text
 phase = e × (ω / ω_ref) × cos(θ)
 a_energy = a_max × tanh(k_E × phase)
 ~~~
 
-부호 함수 대신 `tanh`를 사용해 방향 전환 시 명령이 갑자기 뛰지 않게 했습니다.
+The implementation uses `tanh` instead of a sign function so the command does not jump abruptly during direction reversal.
 
-레일 중앙을 유지하기 위한 PD 항:
+The PD term that keeps the cart near the center of the rail is:
 
 ~~~text
 a_center = clamp(k_x(x_center - x) - k_v v,
@@ -91,94 +93,94 @@ a_center = clamp(k_x(x_center - x) - k_v v,
 a_total = clamp(a_energy + a_center, -a_max, +a_max)
 ~~~
 
-아래쪽에서 `|ω|`가 매우 작을 때는 짧은 startup kick을 사용합니다. kick은 하향 허용각 안에서만 실행되며 수직 통과 중에는 다시 발생하지 않습니다.
+When `|ω|` is very small near the downward position, the controller uses a short startup kick. The kick is allowed only inside the configured downward-angle region and is not retriggered while passing upright.
 
-## 포착과 재진입
+## Capture and Re-entry
 
-기본 포착 조건:
+Basic capture conditions:
 
 ~~~text
 |θ| ≤ θ_capture
 |ω| ≤ ω_capture
 ~~~
 
-단순히 각도만 보고 전환하면 카트가 속도 한계 가까이에 있을 때 제어 여유가 사라질 수 있습니다. 선택적인 headroom 검사는 수직 평형점의 발산 모드를 이용합니다.
+Switching on angle alone can leave no control authority when the cart is near its velocity limit. An optional headroom check uses the unstable mode of the upright equilibrium:
 
 ~~~text
 z = ω + sqrt(g/l) × θ
 Δv ≈ l × z
 ~~~
 
-예상 속도 변화와 가속도 요구량이 설정한 reserve 안에 있을 때만 균형 모드로 넘깁니다.
+The controller enters balance only if the predicted velocity change and acceleration demand fit within the configured reserve.
 
-전환할 때 현재 허용 속도를 보존합니다. 첫 balance 명령을 0으로 만들면 진자가 수직을 통과하는 순간 카트가 갑자기 제동되기 때문입니다.
+The current allowable velocity is preserved at the transition. Forcing the first balance command to zero would abruptly brake the cart precisely as the pendulum passes upright.
 
-균형 중 `release_angle_rad`를 벗어나면 다시 스윙업으로 돌아갑니다. capture와 release 값이 달라 전환 지점에서 모드가 빠르게 왕복하지 않습니다.
+If the pendulum moves outside `release_angle_rad` during balance, the controller returns to swing-up. Separate capture and release values prevent rapid mode chattering at the transition boundary.
 
-## 영상 지연 보정
+## Video-Delay Compensation
 
-에너지 스윙업과 균형 제어의 시간 보정은 별도 설정으로 분리되어 있습니다. 스윙업에도 같은 동역학 예측기를 적용할 수 있지만, 위 성공 기록에서는 스윙업 예측 시간을 0으로 두고 균형 단계에만 20 ms를 적용했습니다.
+Timing compensation for energy swing-up and balance control is configured separately. The same dynamics predictor can be applied during swing-up, but the successful record described above used zero swing-up prediction time and applied 20 ms only in the balance stage.
 
-균형 단계에서는 선택적으로:
+During balance, the controller can optionally:
 
-1. 필터된 각속도와 같은 시점의 과거 각도를 보간
-2. 실제로 허용된 카트 가속도 이력을 사용
-3. 진자 길이, 점성 감쇠와 Coulomb 마찰을 포함한 모델을 적분
-4. 제한된 horizon 안에서 현재 `θ, ω`를 예측
+1. Interpolate the past angle aligned with the filtered angular velocity.
+2. Use the history of cart acceleration that was actually permitted.
+3. Integrate a model that includes pendulum length, viscous damping, and Coulomb friction.
+4. Predict the current `θ, ω` over a bounded horizon.
 
-예측 상태는 선택된 제어 계산에만 사용합니다. 카트 위치, 레일 경계, 추적 상태와 안전 판단은 원시 측정을 그대로 사용하며, 성공 기록의 포착 조건도 예측을 거치지 않은 측정값을 사용했습니다.
+The predicted state is used only for the selected control calculation. Raw measurements remain the basis for cart position, rail boundaries, tracking state, and safety decisions. The capture conditions used for the recorded result also used measurements without prediction.
 
-## 최종 안전 제한
+## Final Safety Limits
 
 ~~~mermaid
 flowchart LR
-    A["Controller velocity"] --> B["호스트 속도 제한"]
-    B --> C["호스트 가속도 제한"]
-    C --> D["카메라 위치 기반 제동거리"]
+    A["Controller velocity"] --> B["Host velocity limit"]
+    B --> C["Host acceleration limit"]
+    C --> D["Camera-position stopping distance"]
     D --> E["USB serial"]
     E --> F["RP2040 watchdog"]
-    F --> G["RP2040 가감속·제동거리"]
-    G --> H["soft limit + 물리 limit"]
-    H --> I["hardware PWM STEP"]
+    F --> G["RP2040 acceleration/deceleration and stopping distance"]
+    G --> H["Software limits + physical limits"]
+    H --> I["Hardware PWM STEP"]
 ~~~
 
-호스트 제동거리:
+Host stopping distance:
 
 ~~~text
 d_stop = v²/(2a) + |v|t_latency + margin
 ~~~
 
-진행 방향의 남은 거리가 `d_stop`보다 짧으면 바깥쪽 명령을 막고 반대 방향 제동만 허용합니다.
+When the remaining distance in the direction of travel is shorter than `d_stop`, the host blocks outward commands and permits only braking in the opposite direction.
 
-RP2040은 호스트와 별개로 watchdog, 호밍 상태, 양쪽 리미트, ESTOP, 최대 속도와 가감속을 다시 검사합니다.
+Independently of the host, the RP2040 rechecks the watchdog, homing state, both limits, ESTOP, maximum velocity, and acceleration/deceleration.
 
-## 실물 시험 설정
+## Physical-Test Configuration
 
-| 항목 | 값 |
+| Item | Value |
 | --- | ---: |
-| 카트 중앙 | 256.369 mm |
-| angle PID | 26000 / 0 / 3300 |
-| position PID | 0.0000077 / 0 / 0.0001875 |
-| 균형 속도 상한 | 240 mm/s |
-| 균형 가속도 상한 | 2000 mm/s² |
-| 스윙업 속도 상한 | 240 mm/s |
-| 스윙업 가속도 상한 | 1500 mm/s² |
-| 스윙업 이동 범위 | 중앙에서 ±160 mm |
-| 에너지 게인 | 46 |
-| 에너지 여유 | 0.045 |
-| 포착 각도 | 0.22 rad |
-| 포착 각속도 | 1.5 rad/s |
-| 포착 headroom | 20% |
-| balance 예측 horizon | 20 ms |
-| rate 정렬 | 30 ms |
+| Cart center | 256.369 mm |
+| Angle PID | 26000 / 0 / 3300 |
+| Position PID | 0.0000077 / 0 / 0.0001875 |
+| Balance velocity limit | 240 mm/s |
+| Balance acceleration limit | 2000 mm/s² |
+| Swing-up velocity limit | 240 mm/s |
+| Swing-up acceleration limit | 1500 mm/s² |
+| Swing-up travel range | ±160 mm about center |
+| Energy gain | 46 |
+| Energy margin | 0.045 |
+| Capture angle | 0.22 rad |
+| Capture angular velocity | 1.5 rad/s |
+| Capture headroom | 20% |
+| Balance prediction horizon | 20 ms |
+| Rate alignment | 30 ms |
 
-이 값은 해당 장비의 기록이며 다른 장비의 초기값으로 바로 사용하기 위한 값이 아닙니다.
+These values document this particular apparatus; they are not intended as initial values for other hardware.
 
-## 관련 코드
+## Related Code
 
-- [PID와 스윙업 상태기](../raspberry_pi/pid_controller.py)
-- [호스트 안전 상태기](../raspberry_pi/safety.py)
-- [실행 스레드와 모드 전환](../raspberry_pi/runtime.py)
-- [RP2040 펌웨어](../firmware/main.ino)
-- [스윙업 검증 절차](swing_up_validation.md)
-- [하드웨어 검증 절차](hardware_validation.md)
+- [PID and swing-up state machine](../raspberry_pi/pid_controller.py)
+- [Host safety state machine](../raspberry_pi/safety.py)
+- [Runtime threads and mode transitions](../raspberry_pi/runtime.py)
+- [RP2040 firmware](../firmware/main.ino)
+- [Swing-up validation procedure](swing_up_validation.md)
+- [Hardware validation procedure](hardware_validation.md)

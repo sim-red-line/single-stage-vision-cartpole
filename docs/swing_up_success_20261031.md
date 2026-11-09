@@ -1,124 +1,91 @@
-# 자동 스윙업 후 5초 균형 유지 확인 — 2026-10-31
+**English** | [한국어](ko/swing_up_success_20261031.md)
 
-이 문서는 20:30 KST의 5초 시험과 당시 전원 경고 기록이다.
-이후 15초 시험 종료 후 무제어 상태에서도 진자가 서 있고, 전원을 끄고 기울인
-위치에서도 멈추는 기계 저항이 확인됐다. 앞선 5초 기록도 제어 단독 효과의
-증명으로 사용하지 않는다. 최신 해석과 저장 설정은
-[15초 기록과 기계 저항 점검](hold15_success_20261031.md)에 정리했다.
+# Five-Second Balance Record After Automatic Swing-Up — 2026-10-31
 
-**2026-10-31 20:30:48 KST 시작 시험에서 자동 스윙업 후 연속 ±5° 5.08초를
-확인했다. 성공 조건 도달 후 시험을 종료하고 실제/목표 모터 속도 0을 확인했다.**
+This document records the five-second test at 20:30 KST and the power warning observed at that time. After a later 15-second test, the pendulum was found to remain upright without control and to stop at a tilted position even with power off, indicating mechanical resistance. The earlier five-second record therefore must not be used as proof of control-only performance. The latest interpretation and saved configuration are documented in the [15-second record and mechanical-resistance review](hold15_success_20261031.md).
 
-실험 ID: `20261031T113048Z-2c07fdc8`.
-한 번의 실제 시험에서 기준을 충족한 결과이며, 장기 유지나 반복 성공률을
-검증한 결과는 아니다. 당시 성공 직후에는 추가 실제 시험을 시작하지 않았다.
+**In the test that began at 20:30:48 KST on 2026-10-31, 5.08 continuous seconds within ±5° were confirmed after automatic swing-up. The test ended once the success condition was met, and zero actual and target motor velocity were confirmed.**
 
-## 실제 검증 결과
+Experiment ID: `20261031T113048Z-2c07fdc8`.
+This was one physical run that met the criterion; it did not validate long-term holding or repeatability. No further physical test was started immediately after the result.
 
-- 하향 시작 → 첫 포착 약 6.81초 → 균형 모드 약 5.26초.
-- 원시 CSV의 연속 ±5° 구간: 약 6.97~12.05초, **5.079998849초**.
-- 독립적인 약 20Hz 모드 기록에서도 연속 ±5° **5.0461초** 확인.
-- 균형 모드 각도 RMS 약 **1.92°**, 균형 모드 속도 포화 0%.
-- 전체 시험 약 12.05초. 실제 모터 최대 속도 240mm/s.
-- 기록된 최대 절대 각속도 14.778rad/s, 기존 제한 16rad/s 이내.
-- 색점 검출률 100%, 추적 누락 0회. 영상 362프레임, 녹화 누락 0.
-- 원본 영상에서 하향 시작과 7~12초 수직 유지를 확인했고, 검토 프레임에
-  손 접촉은 보이지 않았다. 각도 판정은 예측값이 아닌 원시 영상 상태를 사용했다.
-- 종료 후 상태 IDLE, 카트 169.312mm, 실제/목표 속도 0.
-  호밍·워치독·Pi 전원 진단 정상, RP2040 fault·ESTOP·리미트 입력 없음.
+## Physical Validation Results
 
-성공 직후의 정지 확인 이후, 기록 정리 중 Pi에 **저전압·스로틀링 발생 이력**이
-새로 감지돼 전원 보호 FAULT로 바뀌었다. 현재 실제/목표 속도는 계속 0이며
-이 보호를 해제하거나 Pi에 재부팅 명령을 실행하지 않았다. 성공 직후의 정상 전원
-스냅샷과 이후 경고 스냅샷을 별도로 보존했다.
+- Downward start → first capture at approximately 6.81 s → balance mode for approximately 5.26 s.
+- Continuous interval within ±5° in the raw CSV: approximately 6.97–12.05 s, **5.079998849 s**.
+- The independent approximately 20 Hz mode log also confirmed **5.0461 continuous seconds** within ±5°.
+- Angle RMS in balance mode was approximately **1.92°**; velocity saturation in balance mode was 0%.
+- Total test duration was approximately 12.05 s. Maximum actual motor velocity was 240 mm/s.
+- Maximum recorded absolute angular velocity was 14.778 rad/s, within the existing 16 rad/s limit.
+- Color-marker detection was 100%, with zero tracking losses. The video contains 362 frames with zero recording drops.
+- The original video confirmed the downward start and an upright interval from approximately 7 to 12 seconds, with no visible hand contact in the reviewed frames. The angle decision used raw video state, not predicted values.
+- After completion: IDLE, cart position 169.312 mm, and zero actual and target velocity. Homing, the watchdog, and Raspberry Pi power diagnostics were healthy; there was no RP2040 fault, ESTOP, or limit input.
 
-그 뒤 Pi가 재부팅된 상태를 확인했다. 재부팅 원인은 확정하지 않았으며,
-새 부팅의 전원 이력 비트가 0이라는 사실만으로 전원이 수리됐다고 판단하지 않았다.
-이전 전원 경고 검토 잠금을 시작 전에 거는 대시보드와 localhost:8000 연결을
-복구했다. **당시 잠금 상태는 RP2040 ESTOP·미호밍, 실제/목표 속도 0**이었다.
-이 단계에서는 ESTOP 해제·호밍·추가 시험을 실행하지 않았다. 이후 사용자의 전원
-점검·준비 확인에 따른 잠금 검토와 재호밍은 위 15초 성공 기록에 별도로 남겼다.
+After the immediate standstill confirmation, a history of **undervoltage and throttling events** was newly detected on the Raspberry Pi while the records were being organized, and the system entered a power-protection FAULT. Actual and target velocity remained zero; this protection was not cleared and no reboot command was sent to the Raspberry Pi. The healthy power snapshot immediately after the run and the later warning snapshot were preserved separately.
 
-판정은 `balance` 모드·유효한 원시 추적·카메라 상태 지연·연속 표본을 함께 확인했다.
-전체 스윙 동작을 포함하는 RMS와 균형 모드 RMS를 구분했다.
+The Raspberry Pi was subsequently found to have rebooted. The cause was not established, and a zero power-history bit in the new boot was not treated as evidence that the power issue had been repaired. The dashboard and `localhost:8000` connection were restored with a review lock applied before startup for the previous power warning. **At that point, the system was in RP2040 ESTOP, was not homed, and had zero actual and target velocity.** No ESTOP clear, homing, or further test was performed at this stage. The later lock review and rehoming, after the user's power inspection and readiness confirmation, are recorded separately in the 15-second document referenced above.
 
-## 저장한 설정
+The decision jointly checked `balance` mode, valid raw tracking, camera-state age, and continuous samples. RMS over the complete swinging motion was kept distinct from RMS in balance mode.
 
-PID 여섯 이득은 기존 값을 유지했다.
+## Saved Configuration
 
-| 항목 | 값 |
+All six PID gains retained their existing values.
+
+| Item | Value |
 | --- | --- |
-| 각도 PID | 26000 / 0 / 3300 |
-| 위치 PID | 0.0000077 / 0 / 0.0001875 |
-| 스윙업 에너지 게인 | 44 |
-| 목표 에너지 여유 | 0.045 |
-| 에너지 계산 시간 보정 | 0초 |
-| catch 각도 / 각속도 | 0.22rad (±12.6°) / 1.5rad/s |
-| 포착 시 구동 여유 | 20% |
-| 균형 전용 카메라 지연 보정 | 0.020초 |
-| 균형 전용 각속도 시차 정렬 | 0.030초 |
-| 전체 스윙업 예측 | 꺼짐 |
-| 모델 감쇠 / 마찰 | 0.06 / 0.36 |
-| 초기 가속 | 200mm/s², 0.3초 |
-| 카트 복귀 위치/속도 이득 | 3.2 / 3.0 |
-| 스윙업/균형 속도 | 240 / 240mm/s |
-| 스윙업/균형 가속도 | 1500 / 2000mm/s² |
-| 중앙 / 허용 이동 | 256.369mm / ±160mm |
+| Angle PID | 26000 / 0 / 3300 |
+| Position PID | 0.0000077 / 0 / 0.0001875 |
+| Swing-up energy gain | 44 |
+| Target energy margin | 0.045 |
+| Energy-calculation timing compensation | 0 s |
+| Catch angle / angular velocity | 0.22 rad (±12.6°) / 1.5 rad/s |
+| Control headroom at capture | 20% |
+| Balance-only camera-delay compensation | 0.020 s |
+| Balance-only angular-rate alignment | 0.030 s |
+| Full swing-up prediction | Off |
+| Model damping / friction | 0.06 / 0.36 |
+| Startup acceleration | 200 mm/s² for 0.3 s |
+| Cart return position/velocity gains | 3.2 / 3.0 |
+| Swing-up / balance velocity | 240 / 240 mm/s |
+| Swing-up / balance acceleration | 1500 / 2000 mm/s² |
+| Center / allowed travel | 256.369 mm / ±160 mm |
 
-기존 물리·추적·리미트·워치독·시간·각속도 보호는 유지했다.
-기존 카메라 레일 좌표와 색점 프로필도 유지했다.
-매 시험은 저속으로 260mm를 거쳐 오른쪽에서 244.35mm로 접근한 뒤 시작했다.
-이번 실제 시작 위치는 244.313mm였다.
+The existing physical, tracking, limit, watchdog, time, and angular-velocity protections remained enabled. Existing camera-to-rail coordinates and the color-marker profile were retained. Before each test, the cart moved at low speed through 260 mm and approached 244.35 mm from the right. The actual initial position for this run was 244.313 mm.
 
-Pi와 PC의 `config.local.yaml` SHA-256:
+SHA-256 of `config.local.yaml` on the Raspberry Pi and PC:
 `fba0af4f74db2db1c5786776975bbfb1b7463783ad72da63f3654dfe45f96ab6`.
 
-## 변경을 나눠 확인한 과정
+## Isolated Change Sequence
 
-| 조건 | 실제 결과 |
+| Condition | Physical result |
 | --- | --- |
-| 게인32·여유0.025·catch0.22 | 최대 상승 163.64°, 포착 없음 |
-| 게인44·여유0.025 | 최대 상승 164.13°, 포착 없음 |
-| 게인44·여유0.045 | 3회 포착, 가장 긴 균형 0.849초 |
-| 같은 조건 반복 | 3회 포착, 가장 긴 균형 0.372초 |
-| 에너지 시간 보정만 30ms 적용 | 최대 상승 163.85°, 포착 없음 → 0으로 복귀 |
-| 에너지 시간 보정0·균형 전용 보정 적용 | 1회 포착, 연속 ±5° 5.08초 성공 |
+| Gain 32, margin 0.025, catch 0.22 | Maximum rise 163.64°, no capture |
+| Gain 44, margin 0.025 | Maximum rise 164.13°, no capture |
+| Gain 44, margin 0.045 | Three captures; longest balance 0.849 s |
+| Repeat under the same condition | Three captures; longest balance 0.372 s |
+| Apply only 30 ms energy timing compensation | Maximum rise 163.85°, no capture → restored to zero |
+| Zero energy compensation + balance-only compensation | One capture; successful 5.08 continuous seconds within ±5° |
 
-게인 증가만으로는 이번 비교에서 상승 부족이 크게 개선되지 않았다.
-목표 에너지 여유를 높이자 두 시험에서 각각 3회 포착했지만 유지 시간이 짧았다.
-두 기록에서 각도 대비 필터된 각속도의 시차는 각각 약 29ms로 추정됐다.
+Increasing gain alone did not materially resolve insufficient rise in this comparison. Raising the target energy margin produced three captures in each of two tests, but balance duration remained short. In those two records, the lag between angle and filtered angular velocity was estimated at approximately 29 ms.
 
-에너지 계산과 균형 피드백이 같은 시차 설정에 묶여 있던 부분을 분리했다.
-새 `balance_rate_lag_s`는 균형 단계에서만 작동한다. 누락 또는 null이면 기존처럼
-`energy_rate_lag_s`를 따라가므로 기존 설정 동작은 유지된다. 스윙업은 기존
-각도·각속도와 에너지 계산을 유지하고, 균형 단계에서만 측정 시점을 정렬한 뒤
-이전에 허용된 모터 명령과 가속도 제한 모델로 각도·각속도를 현재 시점까지 예측한다.
-카트 위치·속도·원시 측정 시각과 안전 판단 입력은 유지했다.
+Timing settings that had coupled energy calculation and balance feedback were separated. The new `balance_rate_lag_s` operates only during balance. If omitted or null, it follows `energy_rate_lag_s` as before, preserving existing configuration behavior. Swing-up retains the previous angle, angular velocity, and energy calculations. Only in balance are measurement times aligned before the controller predicts angle and angular velocity to the current time using previously permitted motor commands and the acceleration-limited model. Cart position, cart velocity, raw measurement timestamps, and safety-decision inputs are unchanged.
 
-전체 테스트 **278개 통과**. 새 균형 보정이 에너지 출력과 포착 자격을 바꾸지
-않는지, 기존 예측과 같은 결과를 내는지, 시차 범위와 예측 시간 제한을 지키는지
-검증했다. 이전 두 실제 영상의 독립 재처리에서는 각도 추정 RMS 오차가 각각
-2.47°/3.20°에서 0.312°/0.330°로 줄었다. 이 재처리는 실제 성공 판정과 구분했다.
+**All 278 tests passed.** New tests confirm that balance-only compensation does not alter energy output or capture eligibility, matches the existing predictor, and respects rate-lag and prediction-horizon limits. Independent reprocessing of the two preceding physical videos reduced angle-estimation RMS error from 2.47°/3.20° to 0.312°/0.330°, respectively. This reprocessing is separate from the physical success decision.
 
-준비 도구는 별도로 검토한 설정의 명시적 SHA-256과 manifest의 설정 해시가
-일치해야 동작한다. 설정·제어 소스 변경을 거부하는 검증 4개도 포함됐다.
-기존 저속 위치 복귀·한 번의 전경 시험·예상 밖 fault 처리·시간 제한은 유지했다.
+The preparation utility operates only when the explicitly reviewed configuration SHA-256 matches the configuration hash in the manifest. Four validations that reject configuration or control-source changes were also included. Existing low-speed position return, a single foreground test, unexpected-fault handling, and time limits were retained.
 
-첫 준비 시 서비스 종료 확인이 시간 초과됐으나 위치 이동은 0회였다.
-종료 완료를 확인하고 서버와 준비 도구의 부모 프로세스를 분리해 재시작한 뒤
-위치 복귀를 완료했다. 이 과정에서 ARM/START나 시험 구동은 발생하지 않았다.
+During the first preparation attempt, confirmation that the service had stopped timed out, but position moves remained at zero. After shutdown was confirmed, the server and preparation utility were restarted with their parent processes separated, and position return completed. No ARM/START or test actuation occurred during that recovery.
 
-## 원본과 복원 자료
+## Originals and Restoration Materials
 
-- 성공 조건과 파일 해시: `experiments/maintenance/balance-only-separated-20261031.manifest.json`.
-- 원시 CSV·모드 기록: `experiments/logs/20261031T113048Z-2c07fdc8.{csv,monitor.json}`.
-- 요약: `experiments/summaries/20261031T113048Z-2c07fdc8.json`.
-- 원본 영상: Pi의 `experiments/videos/20261031T113048Z-2c07fdc8.avi`.
-- 성공 직후 정지 확인: `experiments/maintenance/successful-swingup-final-state-20261031.json`.
-- 이후 전원 보호 상태: `experiments/maintenance/successful-swingup-postcheck-power-fault-20261031.json`.
-- 재부팅 후 최신 잠금 상태: `experiments/maintenance/successful-swingup-after-reboot-locked-20261031.json`.
-- 변경 전 제어 코드: `experiments/maintenance/pid_controller.before-balance-rate-separation-20261031.py`.
-- 변경 전 로컬 설정: `config.before-balance-only-separated.20261031.yaml` 및 Pi의 날짜별 백업.
+- Success conditions and file hashes: `experiments/maintenance/balance-only-separated-20261031.manifest.json`.
+- Raw CSV and mode log: `experiments/logs/20261031T113048Z-2c07fdc8.{csv,monitor.json}`.
+- Summary: `experiments/summaries/20261031T113048Z-2c07fdc8.json`.
+- Original video: `experiments/videos/20261031T113048Z-2c07fdc8.avi` on the Raspberry Pi.
+- Standstill confirmation immediately after the result: `experiments/maintenance/successful-swingup-final-state-20261031.json`.
+- Later power-protection state: `experiments/maintenance/successful-swingup-postcheck-power-fault-20261031.json`.
+- Latest locked state after reboot: `experiments/maintenance/successful-swingup-after-reboot-locked-20261031.json`.
+- Previous control code: `experiments/maintenance/pid_controller.before-balance-rate-separation-20261031.py`.
+- Previous local configuration: `config.before-balance-only-separated.20261031.yaml` and dated backups on the Raspberry Pi.
 
-후속 시험이 필요하면 이 조건을 기준으로 새 기록을 만들고, 한 번에 변경하는
-항목을 구분한다. 현재 예약·반복 ARM/START 구동 작업은 없다.
+A follow-up test should start from this condition and isolate each changed variable in a new record. No scheduled or repeated ARM/START run remains.

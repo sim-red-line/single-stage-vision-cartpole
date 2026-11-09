@@ -1,65 +1,67 @@
-# 비전 처리 파이프라인
+**English** | [한국어](ko/vision_pipeline.md)
 
-이 문서는 카메라 프레임에서 진자 각도와 카트 위치를 얻는 과정을 정리한 것입니다.
+# Vision Processing Pipeline
 
-아래 이미지는 실험 `20261101T053856Z-adde3c2c`의 216번 프레임(7.176초)에 실제 프로파일 `angle-reference-20261101`을 적용한 결과입니다.
+This document describes how pendulum angle and cart position are obtained from camera frames.
 
-![비전 처리 전체 과정](assets/vision-pipeline/vision-pipeline-overview.jpg)
+The images below apply the actual `angle-reference-20261101` profile to frame 216 at 7.176 seconds from experiment `20261101T053856Z-adde3c2c`.
 
-## 전체 흐름
+![Complete vision-processing pipeline](assets/vision-pipeline/vision-pipeline-overview.jpg)
+
+## Overview
 
 ~~~mermaid
 flowchart LR
-    A["BGR 원본 프레임"] --> B["BGR → HSV"]
-    B --> C["마커별 inRange"]
+    A["Raw BGR frame"] --> B["BGR → HSV"]
+    B --> C["Per-marker inRange"]
     C --> D["3×3 MORPH_OPEN"]
     D --> E["3×3 MORPH_CLOSE"]
-    E --> F["contour 면적 필터"]
-    F --> G["후보 점수·모호성 검사"]
-    G --> H["tip / pivot 중심점"]
-    H --> I["θ, x 계산"]
-    I --> J["timestamp 미분·저역통과"]
+    E --> F["Contour-area filter"]
+    F --> G["Candidate scoring and ambiguity check"]
+    G --> H["Tip / pivot centers"]
+    H --> I["Calculate θ, x"]
+    I --> J["Timestamp differentiation and low-pass filtering"]
     J --> K["θ, ω, x, v"]
 ~~~
 
-## 1. 원본 프레임
+## 1. Raw Frame
 
-![원본 프레임](assets/vision-pipeline/01-raw-frame.jpg)
+![Raw frame](assets/vision-pipeline/01-raw-frame.jpg)
 
-카메라는 Logitech C922를 640×480 MJPEG, 30 FPS로 사용했습니다. 버퍼 크기는 1로 두고, 영상이 들어온 시각을 monotonic timestamp로 기록합니다.
+The camera is a Logitech C922 configured for 640×480 MJPEG at 30 FPS. The buffer size is one, and frame arrival is recorded with a monotonic timestamp.
 
-이 프레임에서 파란색 마커는 피벗, 분홍색 마커는 진자 끝점입니다.
+In this frame, the blue marker is the pivot and the pink marker is the pendulum tip.
 
-## 2. HSV 임계값
+## 2. HSV Thresholds
 
-![HSV 임계값 결과](assets/vision-pipeline/02-hsv-threshold.png)
+![HSV threshold result](assets/vision-pipeline/02-hsv-threshold.png)
 
-BGR 영상을 `cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)`로 변환한 뒤 마커별 범위를 `cv2.inRange`에 넣습니다.
+The BGR image is converted with `cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)`, then each marker range is passed to `cv2.inRange`.
 
-실험에 사용한 범위:
+Ranges used in the experiment:
 
-| 마커 | H | S | V | 허용 면적 |
+| Marker | H | S | V | Allowed area |
 | --- | ---: | ---: | ---: | ---: |
-| pivot | 96~115 | 160~255 | 50~230 | 30~240 px² |
-| tip | 152~179 | 30~220 | 30~255 | 16~250 px² |
+| pivot | 96–115 | 160–255 | 50–230 | 30–240 px² |
+| tip | 152–179 | 30–220 | 30–255 | 16–250 px² |
 
-프레임의 배경 밝기는 103, 프로파일 기준은 102였습니다. 두 값의 차이에 따라 V 하한과 상한에 +1을 적용했습니다.
+The frame background brightness was 103 and the profile reference was 102. The lower and upper V bounds were shifted by +1 for this difference.
 
-밝기 보정은 제한적으로만 동작합니다.
+Brightness compensation is deliberately bounded.
 
-| 기준 밝기와의 차이 | 동작 |
+| Difference from reference brightness | Behavior |
 | --- | --- |
-| `|ΔV| < 28` | 현재 범위를 유지하며 최대 ±18 안에서 V 이동 |
-| `28 ≤ |ΔV| < 55` | 같은 제한 보정을 적용하고 경고 상태 기록 |
-| `|ΔV| ≥ 55` | 검출을 중단하고 재보정 요구 |
+| `|ΔV| < 28` | Keep the current range and shift V by at most ±18 |
+| `28 ≤ |ΔV| < 55` | Apply the same bounded correction and record a warning state |
+| `|ΔV| ≥ 55` | Stop detection and require recalibration |
 
-이 단계에서 두 마커에 해당하는 픽셀은 모두 144개였습니다.
+At this stage, each marker occupied 144 pixels.
 
 ## 3. Morphology
 
-![Morphology 결과](assets/vision-pipeline/03-morphology.png)
+![Morphology result](assets/vision-pipeline/03-morphology.png)
 
-이진 마스크에 3×3 타원 커널을 사용합니다.
+A 3×3 elliptical kernel is applied to each binary mask.
 
 ~~~python
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
@@ -67,24 +69,24 @@ mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 ~~~
 
-`MORPH_OPEN`은 작은 점 노이즈를 제거하고, `MORPH_CLOSE`는 마커 내부의 작은 빈 공간을 메웁니다. 처리 후 남은 픽셀은 135개였습니다. 이미지에서 어두운 자주색 점은 이 과정에서 제거된 픽셀입니다.
+`MORPH_OPEN` removes small point noise, and `MORPH_CLOSE` fills small holes inside a marker. After processing, 135 pixels remained. The dark purple points in the image are pixels removed by this stage.
 
-## 4. Contour와 중심점
+## 4. Contours and Centers
 
-![Contour와 상태 계산](assets/vision-pipeline/04-contours-state.jpg)
+![Contours and state calculation](assets/vision-pipeline/04-contours-state.jpg)
 
-`cv2.findContours`로 외곽선을 찾은 뒤 프로파일의 면적 범위에 들어오는 후보만 남깁니다.
+After contours are found with `cv2.findContours`, only candidates inside the profile's area range are retained.
 
-후보마다 다음 값을 계산합니다.
+The following values are calculated for each candidate:
 
 ~~~text
 solidity   = contour area / convex hull area
 extent     = contour area / bounding-box area
 area_score = exp(-|ln(area / sqrt(min_area × max_area))|)
-continuity = exp(-이전 중심점과의 거리 / 120)
+continuity = exp(-distance from previous center / 120)
 ~~~
 
-최종 점수:
+Final score:
 
 ~~~text
 score = 0.38 × solidity
@@ -93,27 +95,27 @@ score = 0.38 × solidity
       + 0.18 × continuity
 ~~~
 
-기본 통과 기준은 0.55입니다. 두 번째 후보의 면적이 첫 번째 후보의 72% 이상이고 점수도 85% 이상이면 하나를 임의로 고르지 않고 `AMBIGUOUS`로 처리합니다.
+The default acceptance threshold is 0.55. If the second candidate has at least 72% of the first candidate's area and at least 85% of its score, the tracker does not select one arbitrarily; it reports `AMBIGUOUS`.
 
-이 프레임의 중심점은 다음과 같습니다.
+Centers in this frame:
 
-| 마커 | x | y |
+| Marker | x | y |
 | --- | ---: | ---: |
 | pivot | 276.352 px | 249.994 px |
 | tip | 376.997 px | 145.358 px |
 
-## 5. 카트 위치와 진자 각도
+## 5. Cart Position and Pendulum Angle
 
-레일의 영상 좌표를 `x_L`, `x_R`, 실제 길이를 `L`이라고 하면 카트 위치는 다음과 같습니다.
+Let the image coordinates of the rail ends be `x_L` and `x_R`, and the physical length be `L`. Cart position is:
 
 ~~~text
 r = (pivot_x - x_L) / (x_R - x_L)
 x_mm = r × L
 ~~~
 
-이 실험의 좌표는 `x_L=147.08 px`, `x_R=478.51 px`, `L=512.738 mm`입니다. 예시 프레임의 카트 위치는 199.989 mm입니다.
+For this experiment, `x_L=147.08 px`, `x_R=478.51 px`, and `L=512.738 mm`. The cart position in the example frame is 199.989 mm.
 
-진자 각도는 수직 위쪽을 0 rad로 둡니다.
+Pendulum angle uses upright as 0 rad.
 
 ~~~text
 dx    = camera_x_sign × (tip_x - pivot_x)
@@ -122,17 +124,17 @@ dy_up = pivot_y - tip_y
 θ     = θ_raw - θ_reference(x)
 ~~~
 
-카메라가 레일과 완전히 평행하지 않아 위치에 따른 수직 기준도 적용합니다.
+Because the camera is not perfectly parallel to the rail, a position-dependent vertical reference is applied.
 
 ~~~text
 θ_reference(x) = θ0 + slope × (x - x_ref)
 ~~~
 
-예시 프레임의 보정된 각도는 +42.898°입니다.
+The corrected angle in the example frame is +42.898°.
 
-## 6. 각속도와 카트 속도
+## 6. Angular and Cart Velocity
 
-연속 프레임의 실제 timestamp 차이를 사용합니다.
+The actual timestamp difference between consecutive frames is used.
 
 ~~~text
 Δθ = wrap_to_pi(θ[k] - θ[k-1])
@@ -140,7 +142,7 @@ dy_up = pivot_y - tip_y
 v_raw = (x[k] - x[k-1]) / dt
 ~~~
 
-미분값은 12 Hz 1차 저역통과 필터를 통과합니다.
+Derivatives pass through a 12 Hz first-order low-pass filter.
 
 ~~~text
 τ = 1 / (2πf_c)
@@ -148,18 +150,18 @@ v_raw = (x[k] - x[k-1]) / dt
 y[k] = y[k-1] + α(y_raw - y[k-1])
 ~~~
 
-다음 상황에서는 이전 상태를 새 측정처럼 재사용하지 않습니다.
+The previous state is not reused as though it were a new measurement in any of these cases:
 
-- 필수 마커가 사라짐
-- 비슷한 후보가 여러 개라 모호함
-- 프레임 간격이 0.12초를 넘음
-- tip과 pivot 사이가 5 px보다 가까움
-- 조명이 프로파일 범위를 크게 벗어남
-- 좌표 보정값이 유효하지 않음
+- A required marker disappears.
+- Multiple similar candidates make the result ambiguous.
+- The frame interval exceeds 0.12 seconds.
+- Tip and pivot are closer than 5 pixels.
+- Lighting is far outside the profile range.
+- A coordinate-calibration value is invalid.
 
-## 관련 코드
+## Related Code
 
-- [카메라 입력](../raspberry_pi/camera.py)
-- [캘리브레이션](../raspberry_pi/calibration.py)
-- [색상 마커 추적](../raspberry_pi/color_tracker.py)
-- [상태 추정](../raspberry_pi/state_estimator.py)
+- [Camera input](../raspberry_pi/camera.py)
+- [Calibration](../raspberry_pi/calibration.py)
+- [Color-marker tracking](../raspberry_pi/color_tracker.py)
+- [State estimation](../raspberry_pi/state_estimator.py)

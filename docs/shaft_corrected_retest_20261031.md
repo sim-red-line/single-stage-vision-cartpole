@@ -1,77 +1,52 @@
-# 축 수정 후 기준 재시험 — 2026-10-31
+**English** | [한국어](ko/shaft_corrected_retest_20261031.md)
 
-이 문서는 10월31일의 3.45초 시험 기록이다. 11월1일의 위치 P 비교와
-위치별 각도 보정 후 15.03초 기록은 [최신 쏠림 검토](position_drift_review_20261101.md)에 있다.
+# Baseline Retest After Shaft Correction — 2026-10-31
 
-**23:09:41 KST 시험에서 자동 스윙업 후 4회 포착했고, 연속 ±5° 유지 최장은
-3.45초였다. 15초 목표는 달성하지 못했다.**
-실험 ID: `20261031T140941Z-608e2f0d`.
+This document records the 3.45-second test from October 31. The November 1 position-P comparison and 15.03-second record after position-dependent angle-reference correction are documented in the [latest drift review](position_drift_review_20261101.md).
 
-사용자가 축이 틀어져 있어 수정했다고 보고하고, 자유 회전·진자 하향·주변 비움·
-24V ON·관찰 중을 확인한 뒤 진행했다. 이전의 수동 수직 유지 현상만으로
-축이 걸렸다고 단정하지 않는다. 축의 정확한 상태를 원격으로 직접 검사한 것은 아니다.
+**The test at 23:09:41 KST captured four times after automatic swing-up, and its longest continuous hold within ±5° was 3.45 seconds. The 15-second target was not achieved.** Experiment ID: `20261031T140941Z-608e2f0d`.
 
-## 측정 결과
+The run proceeded after the user reported correcting a misaligned shaft and confirmed free rotation, the pendulum down, the area clear, 24 V power on, and direct observation. The earlier observation that the pendulum could remain upright does not by itself establish shaft binding. The exact condition of the shaft was not inspected directly through remote access.
 
-| 항목 | 결과 |
+## Measurements
+
+| Item | Result |
 | --- | --- |
-| 첫 포착 | 약 13.73초 |
-| 포착 횟수 | 4회 |
-| 최장 균형 모드 | 약 3.71초 |
-| 원시 CSV의 최장 연속 ±5° | **3.449992680초**, 약 31.77~35.22초 |
-| 독립 약 20Hz 기록의 연속 ±5° | 3.4418초 |
-| 전체 시험 | 약 38.00초 |
-| RP2040 최대 속도 | 240mm/s |
-| 기록된 최대 각속도 | 15.386rad/s, 기존 16rad/s 제한 이내 |
-| 추적 | 검출률 100%, 누락 0회 |
-| 영상 | 1,140프레임, 녹화 누락 0프레임 |
-| 종료 | 스윙업 누적 시간 제한, 실제/목표 모터 속도 0 |
+| First capture | Approximately 13.73 s |
+| Number of captures | 4 |
+| Longest balance-mode interval | Approximately 3.71 s |
+| Longest continuous interval within ±5° in raw CSV | **3.449992680 s**, approximately 31.77–35.22 s |
+| Continuous interval within ±5° in independent approximately 20 Hz log | 3.4418 s |
+| Total test duration | Approximately 38.00 s |
+| Maximum RP2040 velocity | 240 mm/s |
+| Maximum recorded angular velocity | 15.386 rad/s, within the existing 16 rad/s limit |
+| Tracking | 100% detection, zero losses |
+| Video | 1,140 frames, zero recording drops |
+| End condition | Cumulative swing-up timeout, actual and target motor velocity 0 |
 
-판정은 실제 `balance` 모드, 유효한 원시 추적, 120ms 이내 영상 상태와
-연속 표본을 함께 사용했다. 전체 구간의 각도 통계를 균형 유지 시간으로 쓰지 않았다.
+The decision jointly used actual `balance` mode, valid raw tracking, video state no older than 120 ms, and continuous samples. Angle statistics over the entire run were not used as balance-hold duration.
 
-## 균형 상실 전 관찰
+## Observation Before Balance Loss
 
-두 번의 긴 균형 구간에서 카트가 왼쪽으로 이동해 약 121mm의 보호 제동 구간에
-도달했다. 계속 왼쪽을 요청하는 명령이 0 또는 작은 속도로 제한됐고, 이어 진자가
-기울어져 균형 모드를 벗어났다. 두 구간 종료 부근 RP2040 위치는 120.825mm와
-121.088mm였다. 나머지 두 번의 포착은 더 짧았다.
+During both longer balance intervals, the cart moved left and reached the protective-braking region near 121 mm. Commands that continued to request motion left were limited to zero or a small velocity, after which the pendulum tilted and left balance mode. RP2040 positions near the end of these intervals were 120.825 mm and 121.088 mm. The other two captures were shorter.
 
-기존 이동 범위는 중앙 256.369mm ±160mm이고, 그 안에서도 25mm 제동 여유와
-속도·지연을 고려해 감속한다. 이 보호를 완화하지 않았다.
-다음 검토 대상은 카트의 중앙 복귀와 축 수정 후 각도 영점이다.
-이 기록 하나로 원인을 하나로 확정하거나 특정 게인의 개선 효과를 주장하지 않는다.
+The existing travel range was center 256.369 mm ±160 mm. Even within that range, the system decelerated according to a 25 mm margin plus velocity and delay. This protection was not relaxed. The next review targets were cart centering and the angle zero after shaft correction. This single record does not establish one root cause or demonstrate improvement from any particular gain.
 
-## 유지한 조건과 정지 후 관찰
+## Retained Conditions and Post-Stop Observation
 
-스윙업 게인 46·에너지 여유 0.045, PID 여섯 이득, 카메라 보정, 색점 프로필과
-보호 제한을 유지했다. 각도 PID는 `26000 / 0 / 3300`, 위치 PID는
-`0.0000077 / 0 / 0.0001875`다. 카트는 20mm/s 이하로 시작 위치 246.263mm에
-복귀시켰다. 레일 영상 좌표를 다시 보정하지 않았다.
+Swing-up gain 46, energy margin 0.045, all six PID gains, camera calibration, the color-marker profile, and protection limits were retained. The angle PID was `26000 / 0 / 3300`, and the position PID was `0.0000077 / 0 / 0.0001875`. The cart returned to the initial position of 246.263 mm at no more than 20 mm/s. Rail-image coordinates were not recalibrated.
 
-시험 도구의 전체 실행 한도는 45.5초다. 내부 스윙업 누적 30초 제한으로 종료됐으며
-균형 모드의 시간은 스윙업 누적 시간에서 제외되므로 전체 시험은 약 38초였다.
-최종 소프트웨어 상태는 `FAULT: swing-up time limit`이며, 제어는 비활성이다.
-카트 247.613mm, 실제/목표 속도 0, RP2040 fault·ESTOP·리미트 입력 없음,
-호밍·워치독 정상, Pi 전원 진단 `0x0`을 확인했다.
+The test utility's full-run limit was 45.5 seconds. The run ended on the internal cumulative swing-up limit of 30 seconds. Because time in balance mode is excluded from cumulative swing-up time, the full run lasted approximately 38 seconds. The final software state was `FAULT: swing-up time limit`, with control inactive. Cart position was 247.613 mm; actual and target velocity were zero; there was no RP2040 fault, ESTOP, or limit input; homing and the watchdog were healthy; and Raspberry Pi power diagnostics were `0x0`.
 
-결과 반환 뒤 10.01초 동안 추가 구동 없이 상태를 읽었다. 관찰 시작 때부터 진자는
-아래쪽 약 179.66°였고 종료 때 약 179.70°였다. **이 관찰은 수직에서 STOP 직후
-떨어지는 순간을 기록한 것이 아니며, 동일 초기 상태의 PID OFF/ON 비교도 아니다.**
-이번 기록 역시 그 비교를 대신하지 않는다.
+After the result returned, state was read for 10.01 seconds without further actuation. From the start of this observation, the pendulum was already near the downward position at approximately 179.66°, and it ended at approximately 179.70°. **This observation did not record the fall immediately after a STOP from upright and was not a PID-OFF/PID-ON comparison from the same initial state.** It does not substitute for such a comparison.
 
-## 보존 자료
+## Preserved Materials
 
-- 조건·소스 해시: `experiments/maintenance/shaft-corrected-20261031.manifest.json`.
-- 원시 CSV·모드 기록: `experiments/logs/20261031T140941Z-608e2f0d.{csv,monitor.json}`.
-- 요약: `experiments/summaries/20261031T140941Z-608e2f0d.json`.
-- 원본·재생용 영상: `experiments/videos/20261031T140941Z-608e2f0d.{avi,mp4}`.
-- 분석·종료 후 관찰·최종 정지: maintenance 폴더의
-  `shaft-corrected-20261031.analysis.json`, `shaft-corrected-post-stop-20261031.json`,
-  `shaft-corrected-final-state-20261031.json`.
-- 준비·로그·영상 등 16개 파일은 `shaft-corrected-completed-20261031.tar.gz`로
-  보존하고 PC 복사본을 SHA-256으로 대조했다.
+- Conditions and source hashes: `experiments/maintenance/shaft-corrected-20261031.manifest.json`.
+- Raw CSV and mode log: `experiments/logs/20261031T140941Z-608e2f0d.{csv,monitor.json}`.
+- Summary: `experiments/summaries/20261031T140941Z-608e2f0d.json`.
+- Original and playback video: `experiments/videos/20261031T140941Z-608e2f0d.{avi,mp4}`.
+- Analysis, post-stop observation, and final-stop state: `shaft-corrected-20261031.analysis.json`, `shaft-corrected-post-stop-20261031.json`, and `shaft-corrected-final-state-20261031.json` in the maintenance directory.
+- Sixteen files including preparation data, logs, and video were preserved in `shaft-corrected-completed-20261031.tar.gz`, and SHA-256 checks matched the PC copy.
 
-제어 소스와 설정 해시를 기존 검증본과 대조했다. 설정 SHA-256은
-`3a2d7ee57c7092d791e5d86a2421b370eafe592da285e54f32df2ff1d2eafd40`으로 유지됐다.
-시험 뒤 추가 ARM/START나 예약된 구동 작업은 없다.
+Control-source and configuration hashes were compared with the previously validated versions. The configuration SHA-256 remained `3a2d7ee57c7092d791e5d86a2421b370eafe592da285e54f32df2ff1d2eafd40`. No additional ARM/START command or scheduled run remained after the test.

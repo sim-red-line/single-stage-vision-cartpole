@@ -1,68 +1,41 @@
-# 240 mm/s 확대 시험 검토 및 점검 기록
+**English** | [한국어](ko/capture240_review.md)
 
-상태: **사용자 승인 완료. 0.5초 속도·정지 점검 통과. 스윙업 결과 확인 중.**
+# 240 mm/s Expanded-Test Review and Inspection Record
 
-확대 시험 전 모터는 264.375 mm에서 정지해 있었다. 기존 속도 160 mm/s·중앙
-±120 mm에서 실제 자동 스윙업의 균형 제어 전환은 확인했지만,
-최장 PID 구간은 약 0.78초이며 5초 연속 수직 유지는 아직 달성하지 못했다.
+Status: **User approval received. The 0.5-second velocity-and-stop check passed. Swing-up results are under review.**
 
-| 항목 | 이전 | 승인한 시험 범위 |
+Before the expanded test, the motor was stopped at 264.375 mm. Under the previous 160 mm/s and center ±120 mm limits, the physical automatic swing-up had switched into balance control, but the longest PID interval was approximately 0.78 seconds and a continuous five-second upright hold had not yet been achieved.
+
+| Item | Previous | Approved test range |
 | --- | ---: | ---: |
-| 카트 속도 한계 | 160 mm/s | 240 mm/s |
-| 중앙 기준 이동 한계 | ±120 mm | ±160 mm |
-| 스윙업 가속도 | 1,500 mm/s² | 1,500 mm/s² |
-| 균형 제어 가속도 | 2,000 mm/s² | 2,000 mm/s² |
-| 독립 RP2040 운전 속도 상한 | 600 mm/s | 600 mm/s |
+| Cart velocity limit | 160 mm/s | 240 mm/s |
+| Travel limit about center | ±120 mm | ±160 mm |
+| Swing-up acceleration | 1,500 mm/s² | 1,500 mm/s² |
+| Balance-control acceleration | 2,000 mm/s² | 2,000 mm/s² |
+| Independent RP2040 operating-velocity ceiling | 600 mm/s | 600 mm/s |
 
-후보 설정 `config.capture240.candidate.yaml`을 `config.local.yaml`에 적용했다. 승인된 PID 이득
-Kp=26000, Kd=3300, 카트 Kp=0.0000077, Kd=0.0001875를 담았다. 적분 이득은
-모두 0이다. 카메라·레일 보정 좌표, 호밍, 리미트, ESTOP, 워치독 및 추적
-보호는 변경하지 않는다.
+Candidate configuration `config.capture240.candidate.yaml` was applied to `config.local.yaml`. It contains the approved PID gains Kp=26000 and Kd=3300 for angle, and Kp=0.0000077 and Kd=0.0001875 for cart position. Both integral gains are zero. Camera and rail calibration coordinates, homing, limits, ESTOP, watchdog, and tracking protections remain unchanged.
 
-## 제동 확인
+## Braking Check
 
-현재 사용 중인 보수적 제동 가속도 1,000 mm/s², 지연 80 ms, 여유 25 mm를
-그대로 적용하면 240 mm/s에서 필요한 제동 여유는 다음과 같다.
+With the current conservative braking acceleration of 1,000 mm/s², latency of 80 ms, and margin of 25 mm unchanged, the stopping headroom required at 240 mm/s is:
 
 `240²/(2×1000) + 240×0.08 + 25 = 73 mm`
 
-제안한 중앙 이동 범위는 96.369..416.369 mm이며, 기존 소프트웨어 레일
-10..490 mm와 교집합으로 제한된다. 바깥쪽 속도가 240 mm/s일 때 중앙에서
-약 87 mm 지점부터 제동 조건에 들어간다. 이 계산은 실제 240 mm/s 제동을
-검증한 결과 자체는 아니므로 먼저 짧은 실제 점검을 수행했다.
+The proposed center-relative travel range is 96.369–416.369 mm and is clipped to its intersection with the existing software rail range of 10–490 mm. At an outward velocity of 240 mm/s, the braking condition becomes active approximately 87 mm from the center. Because this calculation was not itself a validation of physical braking at 240 mm/s, a short physical check was performed first.
 
-실제 점검 `20261031T062011Z-b59d0b8f`에서 모터 속도 240.0 mm/s 도달을
-확인했다. 기록된 제동 기준 카메라 위치 344.359 mm에서 최종 모터 위치
-368.213 mm까지 차이는 23.854 mm로, 계산한 73 mm 여유 안이었다.
-이 수치에는 카메라·통신 지연이 포함되며 별도 정밀 제동 계측값은 아니다.
-정지 후 카메라/모터 위치 차이는 0.788 mm, 실제·목표 속도는 모두 0이었다.
-두 마커 검출률 100%, 영상 16프레임·드롭 0이며 전원·리미트·워치독 오류는
-없었다. 의도한 0.5초 시간 제한 정지만 확인한 뒤 해제했다.
+In physical check `20261031T062011Z-b59d0b8f`, the motor reached 240.0 mm/s. The distance from the recorded camera position at the braking threshold, 344.359 mm, to the final motor position, 368.213 mm, was 23.854 mm, within the calculated 73 mm allowance. This value includes camera and communications delay and is not a separate precision stopping-distance measurement. After stopping, the camera/motor position difference was 0.788 mm and both actual and target velocity were zero. Both markers had a 100% detection rate; 16 video frames were recorded with zero drops; and no power, limit, or watchdog fault occurred. Only the intended 0.5-second timeout stop was verified before it was cleared.
 
-이후 20 mm/s POS 모드로 368.213 -> 312.263 -> 256.350 mm에 복귀하고 각
-구간 정지를 확인했다. 좌표 보정과 호밍은 수행하지 않았다.
+The cart then returned in 20 mm/s POS mode from 368.213 -> 312.263 -> 256.350 mm, with a confirmed stop after each segment. Coordinate calibration and homing were not performed.
 
-## 승인받은 진행 순서
+## Approved Procedure
 
-1. 모터 실제·목표 속도 0, 진자 아래, 정상 추적·전원·호밍·워치독을 다시
-   확인하고 후보 설정을 적용한다. 대시보드 재시작 자체는 ARM하지 않는다.
-2. 최대 0.5초 점검을 녹화한다. 시작 가속도는 1,000 mm/s², 시작 펄스는
-   0.24초, 에너지 이득은 0.1, 카트 위치·속도 보정 이득은 0으로 둔다.
-   동일한 이동·제동 보호를 사용하며 시작 전 GO 확인과 60초 만료를 유지한다.
-3. 실제 속도 도달, 정지 거리, 카메라/모터 위치 일치, 추적·전원·리미트·
-   워치독 및 최종 실제·목표 속도 0을 확인한다. 이상이 있으면 진행하지 않는다.
-4. 검증된 20 mm/s POS 모드로 중앙에 복귀한다. 필요한 경우 이동을 두
-   구간으로 나누며, 각 구간은 계속 100 mm 이하이고 중앙 방향이어야 한다.
-   레일 좌표 보정이나 호밍은 하지 않는다.
-5. 점검을 통과하면 에너지 이득 32, 목표 여유 0.05, 카트 보정 3.2/3.0으로
-   최대 30초 스윙업 시험을 녹화한다. 전환되면 5초 연속 ±5° 유지를 확인하며,
-   이를 위한 추가 확인은 최대 5.5초다. 종료 시 STOP과 정지 확인을 수행한다.
+1. Confirm again that actual and target motor velocity are zero, the pendulum is down, and tracking, power, homing, and the watchdog are healthy; then apply the candidate configuration. Restarting the dashboard does not itself ARM the system.
+2. Record a check lasting no more than 0.5 seconds. Use 1,000 mm/s² startup acceleration, a 0.24-second startup pulse, energy gain 0.1, and zero cart position/velocity correction gains. Use the same travel and braking protections, with a pre-start GO confirmation that expires after 60 seconds.
+3. Verify achieved velocity, stopping distance, agreement between camera and motor position, tracking, power, limits, watchdog, and final actual and target velocity of zero. Do not proceed if any result is abnormal.
+4. Return to center with the validated 20 mm/s POS mode. Split the move into two segments if necessary; each segment must remain at most 100 mm and point toward the center. Do not recalibrate rail coordinates or rehome.
+5. If the check passes, record a swing-up test lasting no more than 30 seconds with energy gain 32, target margin 0.05, and cart correction gains 3.2/3.0. If the controller transitions, verify a continuous five-second hold within ±5°; up to 5.5 seconds of additional observation is allowed for this verification. Send STOP and confirm standstill at the end.
 
-확대 설정에는 명시적인 `--commissioning-profile capture240`가 필요하다.
-기본 프로필은 계속 160 mm/s·±120 mm를 초과하는 설정을 거부한다.
-코드 적용 후 Pi 전체 테스트 **182개 통과**. 모터를 구동하지 않은 후보
-검증에서도 기존 기본 프로필의 거부와 좁은 범위의 동적 제동을 확인했다.
+The expanded configuration requires an explicit `--commissioning-profile capture240`. The default profile continues to reject settings above 160 mm/s or ±120 mm. After the code change, **all 182 Raspberry Pi tests passed**. Candidate validation without motor actuation also confirmed rejection by the original default profile and dynamic braking in the narrower range.
 
-사용자는 주변 비움·진자 아래·24V ON·직접 관찰 상태로 이 확대 시험을
-명시적으로 승인했다. 스윙업 성공 판정은 별도의 5초 연속 ±5° 유지 확인이
-필요하며, 속도 점검 통과만으로 성공을 주장하지 않는다.
+The user explicitly approved this expanded test while the area was clear, the pendulum was down, 24 V power was on, and the apparatus was under direct observation. Declaring swing-up success requires a separate continuous five-second hold within ±5°; passing the velocity check alone is not claimed as success.
